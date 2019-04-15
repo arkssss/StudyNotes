@@ -1,0 +1,34 @@
+## 使用scp命令实现上传下载
+
+
+
+* 从服务器上下载文件 scp username@servername:/path/filename /Users/mac/Desktop（本地目录）
+
+  例如:`scp root@123.207.170.40:/root/test.txt /Users/mac/Desktop`就是将服务器上的/root/test.txt下载到本地的/Users/mac/Desktop目录下。注意两个地址之间有空格！
+
+
+
+
+
+* **上传本地文件到服务器 scp /path/filename username@servername:/path ;**
+
+  例如`scp /Users/mac/Desktop/test.txt root@123.207.170.40:/root/`
+
+  **注意不要少了服务器IP 和目标文件夹中间的冒号 :**
+
+
+
+
+* 从服务器下载整个目录 scp -r username@servername:/root/（远程目录） /Users/mac/Desktop（本地目录）
+
+  例如:`scp -r root@192.168.0.101:/root/ /Users/mac/Desktop/`
+
+
+
+
+
+* 上传目录到服务器 scp -r local_dir username@servername:remote_dir
+
+  例如：`scp -r test root@192.168.0.101:/root/` 把当前目录下的test目录上传到服务器的/root/ 目录
+
+  注：目标服务器要开启写入权限。
