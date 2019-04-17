@@ -6,6 +6,7 @@
 
 ~~~java
     // 主函数的格式一定 !!! 
+	// main 函数是 JVM 寻找程序的入口 
 	public static void main(String[] args) {
         
         System.out.println("Hello World!");
