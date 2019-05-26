@@ -80,3 +80,28 @@ $git commit -m "description"
 * git diff (显示当前修改(Modified状态下)和最近一次commit的不同之处)
 
   ​	--cached(显示当前staged状态下) 和最近一次的commit的不同之处
+
+
+
+### Gitignore 文件失效
+
+.gitignore 只能忽略**不是staged态**的文件, 即untrack的文件
+
+解决办法:
+
+~~~shell
+// 先删除 cached态文件
+$git rm -r --cached .
+
+// 重新add
+$git add .
+~~~
+
+
+
+
+
+
+
+
+
