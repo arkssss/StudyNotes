@@ -28,3 +28,5 @@ W = $$ \left[  \begin{matrix}   w1 \\ w2 \\ w3 \\w4  \\  ... \\wn \\ 1  \end{mat
 
 
 
+
+
