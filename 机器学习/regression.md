@@ -4,9 +4,9 @@
 
 一般**回归的问题描述**:
 
-给定一个假定映射方程(a hypothesis set) *H*集合 可以完成 输入变量 *X* 到 *Y*  的映射. 回归问题就是用labelled sample *S*(有标签数据的集合) S = {(x$_1$, y$_1$), ..., (x$_m$, y$_m$)} $\in$ (*X*, *Y*) . 找到一个 h $\in$ *H* 有期望的最小损失值(Small expected loss) 或者小的泛化误差 Generalization error.
+给定一个假定映射方程(a hypothesis set) *H*集合 可以完成 输入变量 *X* 到 *Y*  的映射. 回归问题就是用labelled sample *S*(有标签数据的集合) <img src="https://latex.codecogs.com/svg.latex?S&space;=&space;{(x_1,&space;y_1),&space;...&space;,(x_m,&space;y_m)}&space;\in&space;(X,&space;Y)" title="S = {(x_1, y_1), ... ,(x_m, y_m)} \in (X, Y)" /> . 找到一个<img src="https://latex.codecogs.com/svg.latex?h&space;\in&space;H" title="h \in H" /> 有期望的最小损失值(Small expected loss) 或者小的泛化误差 Generalization error.
 
-一般的loss方程为 : R(h) = $\frac{1}{m}\sum_{i=1}^{m}L(h(x_i, y_i))$ , 这里的L又一般是的取 square error
+一般的loss方程为 : <img src="https://latex.codecogs.com/svg.latex?R(h)&space;=&space;\frac{1}{m}\sum_{i=1}^mL(h(x_i,&space;y_i))" title="R(h) = \frac{1}{m}\sum_{i=1}^mL(h(x_i, y_i))" /> , 这里的L又一般是的取 square error
 
 
 
@@ -22,21 +22,21 @@
 
 一般的线性回归可以理解为下面目标函数的优化上 :
 
-MIN$_W$ F(W)  = |X$^T$ W - Y|$^2$  
+<img src="https://latex.codecogs.com/svg.latex?MIN_W&space;F(W)&space;=&space;|X^TW&space;-&space;Y|^2" title="MIN_W F(W) = |X^TW - Y|^2" />
 
 其中 : 
 
-X = $$ \left[  \begin{matrix}   x1,...,xm\\ 1,..., 1   \end{matrix}  \right] $$  融合了偏置项(Bais)
+ 融合了偏置项(Bais)
 
+<img src="https://latex.codecogs.com/svg.latex?X&space;=&space;\left[&space;\begin{matrix}&space;x1,...,xm\\&space;1,...,&space;1&space;\end{matrix}&space;\right]" title="X = \left[ \begin{matrix} x1,...,xm\\ 1,..., 1 \end{matrix} \right]" />
 
-
-W = $$ \left[  \begin{matrix}   w1 \\ w2 \\ w3 \\w4  \\  ... \\wn \\ 1  \end{matrix}  \right] $$   
+<img src="https://latex.codecogs.com/svg.latex?W&space;=&space;\left[&space;\begin{matrix}&space;w1&space;\\&space;w2&space;\\&space;w3&space;\\w4&space;\\&space;...&space;\\wn&space;\\&space;1&space;\end{matrix}&space;\right]" title="W = \left[ \begin{matrix} w1 \\ w2 \\ w3 \\w4 \\ ... \\wn \\ 1 \end{matrix} \right]" />
 
 **即在给定的train数据集下, 找到最小的Loss时对应的W向量**
 
 由于这个公式是可以求导的, 则可以直接利用公式推导的方法: 
 
-**W = ( XX$^T$ )$^{-1}$XY if it is invertible**
+<img src="https://latex.codecogs.com/svg.latex?W&space;=&space;(&space;XX^T&space;)^{-1}XY" title="W = ( XX^T )^{-1}XY" /> if it is invertible
 
 
 
@@ -53,7 +53,7 @@ W = $$ \left[  \begin{matrix}   w1 \\ w2 \\ w3 \\w4  \\  ... \\wn \\ 1  \end{mat
 
 现在的**损失函数**就可以写为 :
 
-MIN$_W$ F(W)  = $\lambda$|W|$^2$  + |X$^T$ W - Y|$^2$ (加入了正规化项的损失函数) 
+<img src="https://latex.codecogs.com/svg.latex?MIN_W&space;F(W)&space;=&space;\lambda|W|^2&space;&plus;&space;|X^T&space;W&space;-&space;Y|^2" title="MIN_W F(W) = \lambda|W|^2 + |X^T W - Y|^2" /> (加入了正规化项的损失函数) 
 
 **即为MSE 加上了 L2正规化项**
 
@@ -85,7 +85,7 @@ Lasso 回归可以实现自动化的重要特征值筛选, 从而可以当特征
 
 Lasso 回归的目标函数 :
 
-MIN$_W$ F(W)  = $\lambda$|W|$_1$  + |X$^T$ W - Y|$^2$ 
+<img src="https://latex.codecogs.com/svg.latex?MIN_W&space;F(W)&space;=&space;\lambda|W|_1&space;&plus;&space;|X^T&space;W&space;-&space;Y|^2" title="MIN_W F(W) = \lambda|W|_1 + |X^T W - Y|^2" />
 
 相比于Ridge回归**大部分类似**, Lasso最大的不同就是其是使用的**正规化参数L1.** 这样Lasso 可以达到直接丢弃无关特征的目的(直接系数置为0), 而Ridge只能无限接近于0
 
@@ -100,8 +100,8 @@ MIN$_W$ F(W)  = $\lambda$|W|$_1$  + |X$^T$ W - Y|$^2$
 例如  :W = [w1, w2, ... , wn]
 
 - L0 : 表示所有非0元素的个数
-- L1 (Lasso) : |W|$_1$ 表示所有元素的绝对值和即为 $\sum_{i=1}^n |w_i|$
-- L2 (ridge) :  |W|$_2$ 表示所有元素的平方和  $ \sum_{i=1}^n w_i^2$
+- L1 (Lasso) : |W|$_1$ 表示所有元素的绝对值和即为 <img src="https://latex.codecogs.com/svg.latex?\sum_{i=1}^n&space;|w_i|" title="\sum_{i=1}^n |w_i|" />
+- L2 (ridge) :  |W|$_2$ 表示所有元素的平方和  <img src="https://latex.codecogs.com/svg.latex?\sum_{i=1}^n&space;w_i^2" title="\sum_{i=1}^n w_i^2" />
 
 
 
@@ -109,14 +109,19 @@ MIN$_W$ F(W)  = $\lambda$|W|$_1$  + |X$^T$ W - Y|$^2$
 
 首先我们公式的形式写出加上了正规化项的目标函数:
 
-MIN$_w$(y - wx)$^2$  + L = RSS + L
+<img src="https://latex.codecogs.com/svg.latex?MIN$_w$(y&space;-&space;wx)$^2$&space;&plus;&space;L&space;=&space;RSS&space;&plus;&space;L" title="MIN$_w$(y - wx)$^2$ + L = RSS + L" />
 
-- **对于Lasso** : 优化式写为 min$_{w, b}${$\sum_{i=1}^n (y_i - wx_1 +b)^2$ } , $\sum_{i=1}^n |w_i|$ <= s 
-- **对于Ridge** : 优化式写为 min$_{w,b}${$\sum_{i=1}^n (y_i - wx_1 +b)^2$ } , $\sum_{i=1}^n w_i^2$  <= s
+- **对于Lasso** : 优化式写为 
+
+  <img src='image/regression-lasso-eq.png'  style='width:400px' />
+
+- **对于Ridge** : 优化式写为
+
+  <img src='image/regression-ridge-eq.png'  style='width:400px' />
 
  以二维的向量举例, 最优点表现为圆环(最小二乘法的最优值) 和 绿色阴影的 **交点**: 
 
-![L1:L2](/Users/ark/%E8%AF%BE%E7%A8%8B%E8%B5%84%E6%96%99/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9B%9E%E5%BD%92/image/L1:L2.png)
+<img src='image/regression-L1-L2.png' />
 
 <center>左L1(Lasso), 右L2(Ridge)
 

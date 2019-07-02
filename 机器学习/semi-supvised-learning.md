@@ -37,13 +37,13 @@
 
 * The distribution of the unlabeled data tells us somethings. 虽然没有标签, 但是也告诉了我们一些信息!
 
-![屏幕快照 2019-06-04 下午7.03.14](image/屏幕快照 2019-06-04 下午7.03.14.png)
+  <img src='image/semi-1.png' />
 
 <center>只考虑有label data的数据集时我们的分类界</center>
 
 
 
-![屏幕快照 2019-06-04 下午7.03.34](image/屏幕快照 2019-06-04 下午7.03.34.png)
+<img src='image/semi-2.png' />
 
 <center>考虑了unlabeled data(灰色的点)的时候, 我们会调整我们的分类界</center>
 
@@ -67,7 +67,7 @@
 
 * Assumption : 此种方式基于的假设是, **在两个class的交接处是不会出现data的, 即data量很低**
 
-![屏幕快照 2019-06-04 下午10.47.16](image/屏幕快照 2019-06-04 下午10.47.16.png)
+<img src='image/semi-3.png' />
 
 如图, **在两个class中间很容易区别**, 且如果利用unlabeled data会得到跟好的决策界
 
@@ -90,7 +90,7 @@
 
 以**神经网络作为训练模型举例** : 
 
-![屏幕快照 2019-06-05 上午10.23.09](image/屏幕快照 2019-06-05 上午10.23.09.png)
+<img src='image/semi-4.png' />
 
 
 
@@ -111,19 +111,19 @@
 
 如下举例子 : 
 
-![屏幕快照 2019-06-05 上午11.13.09](image/屏幕快照 2019-06-05 上午11.13.09.png)
+<img src='image/semi-5.png' />
 
 <center>输出的概率分布集中在class1</center>
 
 
 
-![屏幕快照 2019-06-05 上午11.13.11](image/屏幕快照 2019-06-05 上午11.13.11.png)
+<img src='image/semi-6.png' />
 
 <center>输出的概率分布集中在class5</center>
 
 
 
-![屏幕快照 2019-06-05 上午11.13.14](image/屏幕快照 2019-06-05 上午11.13.14.png)
+<img src='image/semi-7.png' />
 
 <center>输出的概率分散于5个class</center>
 
@@ -131,7 +131,7 @@
 
 这种**输出的概率分布的分散程度, 我们可以entropy来表示** : 描述一个分布的分散程度的信息熵得公式为:
 
-E(y$^u$)  = - $\sum_{m-1}^{5}y_{m}^{u}ln(y_{m}^{u})$
+E(y$^u$)  = - <img src="https://latex.codecogs.com/svg.latex?\sum_{m-1}^{5}y_{m}^{u}ln(y_{m}^{u})" title="\sum_{m-1}^{5}y_{m}^{u}ln(y_{m}^{u})" />
 
 **$y_{m}^{u}$ 为这个u这个unlabel数据的归位m类的概率**, 我们可以计算以上几种分布的信息熵
 
@@ -143,7 +143,7 @@ E(ThirdOne) = ln(5)
 
 Based above : 我们可以在模型的Loss function中加入信息熵这一项, 从而得到新的Loss Function
 
-![屏幕快照 2019-06-05 上午11.34.55](image/屏幕快照 2019-06-05 上午11.34.55.png)
+<img src='image/semi-8.png' />
 
 <center>加入信息熵的损失函数
 
@@ -159,7 +159,7 @@ Based above : 我们可以在模型的Loss function中加入信息熵这一项, 
 
 显然在更加精确的描述下更为合理, 如下图:
 
-![屏幕快照 2019-06-05 上午11.47.06](image/屏幕快照 2019-06-05 上午11.47.06.png)
+<img src='image/semi-9.png' />
 
 <center>三个unlabeled点的分布和它们附近区域的分布</center>
 
@@ -174,7 +174,7 @@ Based above : 我们可以在模型的Loss function中加入信息熵这一项, 
 
 这种方式很容易实现, 假设我们只有两个分类class
 
-![屏幕快照 2019-06-05 上午11.57.22](image/屏幕快照 2019-06-05 上午11.57.22.png)
+<img src='image/semi-10.png' />
 
 <center>两个class的分布图
 
@@ -191,7 +191,7 @@ Based above : 我们可以在模型的Loss function中加入信息熵这一项, 
 
 **核心点就是** : How to know x$^1$ and x$^2$ are close in a high density region ?
 
-![屏幕快照 2019-06-05 下午12.06.13](image/屏幕快照 2019-06-05 下午12.06.13.png)
+<img src='image/semi-11.png' />
 
 <center>所有的数据表示为图中的点
 
@@ -208,25 +208,24 @@ Based above : 我们可以在模型的Loss function中加入信息熵这一项, 
   2. Add edge (算出相似度之后就可以画出graph) 建立graph也有以下几种方法:
 
      * K Nearest Neighbor : 选取一个点周围的最近的三个点连接
-       ![屏幕快照 2019-06-05 下午12.54.33](image/屏幕快照 2019-06-05 下午12.54.33.png)
+
+       <img src='image/semi-12.png' />
 
      * e-Neighborhood  选取一个点附近小于 e 的点连接
 
-![屏幕快照 2019-06-05 下午12.54.37](image/屏幕快照 2019-06-05 下午12.54.37.png)
-
-
+       <img src='image/semi-12.png' />
 
 
 
 **Tips计算相似度常用的方法为 Gaussian Radial basis Function :**
 
-S(x$^i$ , x$^j$) = exp(-$\alpha$ |x$^i$ - x$^j$|$^2$)
+<img src="https://latex.codecogs.com/svg.latex?S(x^i&space;,&space;x^j)&space;=&space;exp(-\alpha&space;|x^i&space;-&space;x^j|^2)" title="S(x^i , x^j) = exp(-\alpha |x^i - x^j|^2)" />
 
 
 
 ##### 4.2.1 建立图后给unlabeled数据贴标签
 
-![屏幕快照 2019-06-05 下午1.06.43](image/屏幕快照 2019-06-05 下午1.06.43.png)
+<img src='image/semi-14.png' />
 
 在建立了一个图之后, **我们给已知的标签的数据其相邻的数据 其属于class1的概率会增加**, 同理这个过程会传递给所有相连的数据
 
@@ -236,13 +235,13 @@ S(x$^i$ , x$^j$) = exp(-$\alpha$ |x$^i$ - x$^j$|$^2$)
 
 ##### 4.2.3 以定量的思想去定义点的Smoothness
 
-![屏幕快照 2019-06-05 下午1.48.35](image/屏幕快照 2019-06-05 下午1.48.35.png)
+<img src='image/semi-15.png' />
 
 <center>为图的节点不同分类计算顺滑度
 
 
 
-我们可以定义的 图的顺滑度为 S(G) = 1/2 $\sum w_{i, j}(y^i - y^j)^2$ 前面的系数不重要, 通俗来说顺滑度就是所有相邻节点的label差的平方乘它们的权值 的合. **Smaller means Smoother**
+我们可以定义的 图的顺滑度为 S(G) = 1/2 <img src="https://latex.codecogs.com/svg.latex?\sum&space;w_{i,&space;j}(y^i&space;-&space;y^j)^2" title="\sum w_{i, j}(y^i - y^j)^2" /> 前面的系数不重要, 通俗来说顺滑度就是所有相邻节点的label差的平方乘它们的权值 的合. **Smaller means Smoother**
 
 对于左图 : S = 0.5 
 
@@ -256,13 +255,13 @@ S(x$^i$ , x$^j$) = exp(-$\alpha$ |x$^i$ - x$^j$|$^2$)
 
 **简化S函数** : 
 
- S(G) = 1/2 $\sum w_{i, j}(y^i - y^j)^2$ = y$^T$L y  
+<img src="https://latex.codecogs.com/svg.latex?S(G)&space;=&space;1/2&space;\sum&space;w_{i,&space;j}(y^i&space;-&space;y^j)^2&space;=&space;y^TL&space;y" title="S(G) = 1/2 \sum w_{i, j}(y^i - y^j)^2 = y^TL y" />
 
 其中 L (Graph Laplacian) = D - W
 
 以上图为例 : 
 
-![屏幕快照 2019-06-05 下午2.02.45](image/屏幕快照 2019-06-05 下午2.02.45.png)
+<img src='image/semi-16.png' />
 
 <center>上图的L求解
 

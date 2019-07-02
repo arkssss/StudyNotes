@@ -6,88 +6,18 @@
 
 
 
-
-
 ## 机器学习概念
 
-* [什么是机器学习](机器学习的基本概念/pdf/README.pdf)
+* [机器学习基本概念](basic.md)
+* [半监督学习](semi-supvised-learning.md)
 
 
 
+## 学习算法
 
-
-
-
-## 半监督学习
-
-- [基本介绍和相关方法](半监督学习/pdf/README.pdf)
-
-
-
-
-
-
-
-## 分类(Classification)
-
-### 基于监督学习 (Supervised Learning)
-
-#### 生成模型 (Generative Model)
-
-- [Bayes decision rule](分类/pdf/Bayes-decision-rule.pdf)
-
-#### 判别模型 (Discrimitive Model)
-
-- [Intro](分类/pdf/Intro-to-Discrimitive-Model.pdf)
-- [Minimun-distance classifier](分类/pdf/minimun-distance-classifier.pdf)
-
-### 基于非监督学习
-
-### 基于半监督学习
-
-
-
-
-
-
-
-
-
-## 回归(Regression)
-
-### 补充知识点
-
-- [正规化项的种类](回归/pdf/Penalty-item.pdf)
-
-- [Intro](回归/pdf/Intro-to-regression.pdf)
-
-
-
-### 一般回归方法
-
-- [一般线性回归](回归/pdf/general-regression.pdf)
-- [岭回归(Ridge)](回归/pdf/Ridge.pdf)
-- [套索(lasso)](回归/pdf/lasso.pdf)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+* [贝叶斯分类器](classification.md)
+* [三种经典线性回归](regression.md)
+* [人工神经网络(ANN)](ann.md)
+* [支持向量机(SVM)](svm.md)
+* [自组织映射网络(SOM)](unsupervised-ann.md)
 

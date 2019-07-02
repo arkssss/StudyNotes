@@ -1,4 +1,4 @@
-# 分类(classification)
+##分类(classification)
 
 
 
@@ -19,13 +19,13 @@
 
 已知事件A,B发生的概率分别为 P(A), P(B), 那么两者的相互的条件概率(conditional probability)分别可以表示为: P(A|B) , P(B|A).
 
-P(A|B) = $\frac{P(A \&B)}{P(B)}$   得出 P(A & B)  = P(A|B) * P(B)
+P(A|B) = <img src="https://latex.codecogs.com/svg.latex?\frac{P(A&space;\&B)}{P(B)}" title="\frac{P(A \&B)}{P(B)}" />   得出 P(A & B)  = P(A|B) * P(B)
 
-P(B|A) = $\frac{P(A \&B)}{P(A)}$   得出 P(A & B)  = P(B|A) * P(A)
+P(B|A) = <img src="https://latex.codecogs.com/svg.latex?\frac{P(A&space;\&B)}{P(A)}" title="\frac{P(A \&B)}{P(A)}" />   得出 P(A & B)  = P(B|A) * P(A)
 
 所以可以推出 =>  P(A|B) * P(B) = P(B|A) * P(A) 稍加变形就是**贝叶斯公式** :
 
-#### P(A|B)  = $\frac{P(B|A)*P(A)}{P(B)}$
+#### P(A|B)  = <img src="https://latex.codecogs.com/svg.latex?\frac{P(B|A)*P(A)}{P(B)}" title="\frac{P(B|A)*P(A)}{P(B)}" />
 
 
 
@@ -40,13 +40,13 @@ P(B|A) = $\frac{P(A \&B)}{P(A)}$   得出 P(A & B)  = P(B|A) * P(A)
 
 所以我们的任务就是求的后验概率 **当观察到硬币为小硬币, 其结果分贝为正反的概率**, 根据贝叶斯公式 : 
 
-P(正 | 硬币 = 小) = $\frac{P(硬币 = 小| 正面) * P(正面)}{P(硬币 = 小)}$
+P(正 | 硬币 = 小) = {P(硬币 = 小| 正面) * P(正面) / P(硬币 = 小)
 
-P(硬币 = 小) = $\frac{13}{100}$ = 0.13
+P(硬币 = 小) = <img src="https://latex.codecogs.com/svg.latex?\frac{13}{100}" title="\frac{13}{100}" /> = 0.13
 
-P(硬币 = 小 | 正) = $\frac{7}{70}$ = 0.1
+P(硬币 = 小 | 正) = <img src="https://latex.codecogs.com/svg.latex?\frac{7}{70}" title="\frac{7}{70}" /> = 0.1
 
-P(正)  = $\frac{70}{100}$  
+P(正)  = <img src="https://latex.codecogs.com/svg.latex?\frac{70}{100}" title="\frac{70}{100}" />  
 
 所以可以求出概率 = 0.54 , 说明**当硬币是小硬币的情况下, 它抛出正面的概率为0.54** 
 
@@ -60,17 +60,17 @@ P(正)  = $\frac{70}{100}$
 
 #### bayes 算出所有类的后验概率
 
-即对于所有的 {c$_1$, ..., c$_w$} $\in$ Class :
+即对于所有的 <img src="https://latex.codecogs.com/svg.latex?{c$_1$,&space;...,&space;c$_w$}&space;$\in$&space;Class&space;:" title="{c$_1$, ..., c$_w$} $\in$ Class :" />
 
 然后根据所有的后验概率找到最大的那一个 Max P(c$_w$ | X), 记为该数据属性的分类 c$_w$
 
-P(c$_i$ | X) = $\frac{P(X | c_i) * P(c_i)}{P(X)}$
+P(c$_i$ | X) = <img src="https://latex.codecogs.com/svg.latex?\frac{P(X&space;|&space;c_i)&space;*&space;P(c_i)}{P(X)}" title="\frac{P(X | c_i) * P(c_i)}{P(X)}" />
 
-其中 P(X) 的概率都一样 : P(X) = $\sum_{j=1}^C P(X | c_i) * P(c_i)$
+其中 P(X) 的概率都一样 : P(X) = <img src="https://latex.codecogs.com/svg.latex?\sum_{j=1}^C&space;P(X&space;|&space;c_i)&space;*&space;P(c_i)" title="\sum_{j=1}^C P(X | c_i) * P(c_i)" />
 
 所以有了结论, **我们将X归于类c$_i$当且仅当** (Bayes' rule minimum error):
 
-#### $P(x|c_i) * P(c_i) > p(x|c_k) * P(c_k)$ 	k = 1, ..., w k$\neq$ i
+#### <img src="https://latex.codecogs.com/svg.latex?P(x|c_i)&space;*&space;P(c_i)&space;>&space;p(x|c_k)&space;*&space;P(c_k)&space;k&space;=&space;1,&space;...,&space;w&space;k\neq&space;i" title="P(x|c_i) * P(c_i) > p(x|c_k) * P(c_k) k = 1, ..., w k\neq i" />
 
 
 
@@ -126,7 +126,7 @@ g$_i$ (x) > g$_j$(x) => x $\in c_i$ j = 1,...,C; j$\neq$ i	(即给予判别式�
 
 判别式是线性模型的可以称为线性判别式 , 例如输入属性为 *x* = [x1, x2, ... , x$_n$] 
 
-g(x) = $w^t$*X*  + $w_0$ 
+g(x) = wT*X*  + $w_0$ 
 
 利用线性判别式的分类器可以称为 *Linear machines*
 
@@ -138,9 +138,9 @@ g(x) = $w^t$*X*  + $w_0$
 
 ### 原理
 
-利用了 *Nearest-neighbour decision rule* 的思想 : 假定现在有n类 $c_i$ $\in c1, c2 , ..., c_n$ 
+利用了 *Nearest-neighbour decision rule* 的思想 : 假定现在有n类 $c_i$ <img src="https://latex.codecogs.com/svg.latex?\in&space;c1,&space;c2&space;,&space;...,&space;c_n" title="\in c1, c2 , ..., c_n" /> 
 
-给每一个类可以选出一个 **类代表** (可以是每一个类的中位数(the mean of class) etc. ) , 对应的记为 $p_i \in p1, ...p_n$
+给每一个类可以选出一个 **类代表** (可以是每一个类的中位数(the mean of class) etc. ) , 对应的记为 <img src="https://latex.codecogs.com/svg.latex?p_i&space;\in&space;p1,&space;...p_n" title="p_i \in p1, ...p_n" />
 
 这里的 $P_i$ 维度必须和**输入数据的属性维度一样**, 既可以看作可输入数据一样的在**坐标轴上的一个个的点**, 这些点就分别代表了他们各自的类
 
@@ -166,13 +166,13 @@ $w_i$  = min$_i$(- 2$X^TP_i$  + $P_i^TP_i$)   = max$_i$($X^TP_i$  - $\frac{1}{2}
 
 结合到我们线性分类器的公式中 :
 
-g$_i$(x) = w$_i^t X$  + $w_{i0}$	 ($w_i$ = $p_i$ , w$_{i0}$ = -$\frac{1}{2} |p_i|^2$)
+<img src="https://latex.codecogs.com/svg.latex?g_i(x)&space;=&space;w_i^t&space;X&space;&plus;&space;w_{i0}&space;(w_i&space;=&space;p_i&space;,&space;w_{i0}&space;=&space;-\frac{1}{2}&space;|p_i|^2)" title="g_i(x) = w_i^t X + w_{i0} (w_i = p_i , w_{i0} = -\frac{1}{2} |p_i|^2)" />
 
 
 
 ### 图示
 
-![M-D-classifier](/Users/ark/%E8%AF%BE%E7%A8%8B%E8%B5%84%E6%96%99/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%88%86%E7%B1%BB/image/M-D-classifier.png)
+<img src='image/classification-M-D-classifier.png' />
 
 - 可以看到经过最小距离形成的决策界就是两点(prototype)连线之间的垂线(perpendicular)
 - 且这个线性分类决策区域是 **always convex** 的
@@ -187,11 +187,11 @@ g$_i$(x) = w$_i^t X$  + $w_{i0}$	 ($w_i$ = $p_i$ , w$_{i0}$ = -$\frac{1}{2} |p_i
 
   从而解决不了一些复杂的分类问题 (如下图的问题用简单的线性机器就解决不了)
 
-  ![Piece-wise](/Users/ark/%E8%AF%BE%E7%A8%8B%E8%B5%84%E6%96%99/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%88%86%E7%B1%BB/image/Piece-wise.png)
+  <img src='image/classification-Piece-wise.png'  />
 
 对于分段的线性判别式, 我们的思想就是对于: **每一个类, 我们可以安排多个Prototype**
 
-- Suppose there are n$_i$ prototypes in class $w_i$  which is $p_i^1, p_i^2, ... , p_i^{n_i}$	
+- Suppose there are n$_i$ prototypes in class $w_i$  which is <img src="https://latex.codecogs.com/svg.latex?p_i^1,&space;p_i^2,&space;...&space;,&space;p_i^{n_i}" title="p_i^1, p_i^2, ... , p_i^{n_i}" />	
 
 - 然后我们将 *X* 归位类 $w_i$ 当且仅当:
 

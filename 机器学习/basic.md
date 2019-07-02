@@ -102,7 +102,7 @@ e.g. 聚类 ...
 
 * Accuracy 
 
-  ACC = $\frac{预测正确的数量}{所有数量}$
+  ACC = 预测正确的数量/所有数量
 
   这种表示方法有时候非常不准确, 因为在数据分布不平衡的情况下, 这个数值会显得没有多少意义. 比如一个二分类的问题, 如果有1000个样本, 其中1个正, 999个负, 那么当模型全预测一边的情况下, 准确率也可以到达999%%, 没有多大意义
 
@@ -112,12 +112,12 @@ e.g. 聚类 ...
 
 * sensitive(灵敏度)
 
-  定义为其中一类的的准确的概率: S = $\frac{类一预测对的数量}{类一所有的数量}$
+  定义为其中一类的的准确的概率: S = 类一预测对的数量/类一所有的数量
 
 * Precision (准确率)
 
   定义为所有被分为该类,和实际该类的比例:
-  P = $\frac{实际类一的数量}{所有被预测为类一的数量}$
+  P = 实际类一的数量/所有被预测为类一的数量
 
 * Recall (召回率) 
 
@@ -133,7 +133,7 @@ e.g. 聚类 ...
 
   以一个简单的线性回归问题举例, y = w$^t$x, 数据集分为 test 和 training
 
-  test数据集的MSE就可以用来横量这个模型的好坏 MSE$_{test}$=$\frac{1}{N_(test)}\sum_{i}(y'^{test} - y^{test})^2$
+  test数据集的MSE就可以用来横量这个模型的好坏 <img src="https://latex.codecogs.com/svg.latex?MSE_{test}&space;=&space;\frac{1}{N(test)}\sum_i(y^{'test}&space;-&space;y^{test})^2" title="MSE_{test} = \frac{1}{N(test)}\sum_i(y^{'test} - y^{test})^2" />
 
   train数据集的MSE可以用于求出最好的系数w
 
