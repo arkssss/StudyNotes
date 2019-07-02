@@ -62,7 +62,7 @@ $git commit -m "description"
 
 ### git相关状态
 
-![status](/Users/ark/课程资料/Git/status.png)
+![status](status.png)
 
 * 修改 & 添加文件 操作都会使文件进入Modified 状态, 而此状态是不能进行commit操作
 

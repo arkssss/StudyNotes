@@ -10,7 +10,7 @@ X = $$ \left[  \begin{matrix}   x1,...,xm\\ 1,..., 1   \end{matrix}  \right] $$ 
 
 
 
-W = $$ \left[  \begin{matrix}   w1 \\ w2 \\ w3 \\w4  \\  ... \\wn \\ 1  \end{matrix}  \right] $$   
+W = $$ \left[  \begin{matrix}   w1 \\ w2 \\ w3 \\w4  \\  ... \\wn \\ 1  \end{matrix}  \right] ​$$   
 
 **即在给定的train数据集下, 找到最小的Loss时对应的W向量**
 

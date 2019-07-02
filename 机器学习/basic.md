@@ -68,7 +68,7 @@ e.g. 聚类 ...
 
 分类问题的输出数据是属于K个分类的数据集, 需要找到一个模型
 
-f(x) : R$^n$ $\in$  {1, 2, ..., K}
+<img src="https://latex.codecogs.com/svg.latex?f(x)&space;=&space;R^n&space;\in&space;{1,&space;2,&space;...&space;,K}" title="f(x) = R^n \in {1, 2, ... ,K}" />
 
 **x 是可以代表输入数据的属性(features)**
 
@@ -168,7 +168,7 @@ gap 很大, 可以通过增加train data数量的方法来避免overfitting的�
 
 * 特征数目过多导致模型过于复杂 e.g.这个例子中, 明明中间的模型可以有很大的泛化能力, 但是当特征数目过多的时候, 第三个就变得非常复杂, 虽然可以很好的fit训练数据集, 但是对于Unseen数据就有**很差的预测能力**
 
-  ![Overfitting](image/Overfitting.png)
+  ![Overfitting](image/basic-overfitting.png)
 
   ​	
 
@@ -191,18 +191,24 @@ Bias-Variance 权衡是针对于模型的泛化能力来说的. 一般来说, �
 
 
 
-![bias-and-variance](image/bias-and-variance.png)
+![bias-and-variance](image/basic-bias-and-variance.png)
 
-在实际的系统中, Bias和Variance是不兼得的, 如果要降低模型的Bias就会在一定的程度上提高模型的Variance, 反正亦然.
+在实际的系统中,**Bias和Variance是不兼得的, 如果要降低模型的Bias就会在一定的程度上提高模型的Variance, 反正亦然.**
 
-* 减少模型的Bias会失去一定的泛化能力, 从而造成Overfitting
-* 减少模型的Variance会失去一定的准确行, 而可能造成Underfitting
+* 减少模型的**Bias会失去一定的泛化能力**, 从而造成Overfitting
+* 加大模型的**Variance会失去一定的准确性**, 而可能造成Underfitting
+
+
+
+
+
+
 
 
 
 #### 以训练结果的视角来看
 
-![tradeoff](image/tradeoff.png)
+![tradeoff](image/basic-tradeoff.png)
 
 
 
@@ -213,45 +219,8 @@ Bias-Variance 权衡是针对于模型的泛化能力来说的. 一般来说, �
 
 所以
 
-当模型的复杂度上升的时候, Bias会下降, 但是Variance会增加, 导致 Overfitting
+当模型的复杂度上升的时候, **Bias会下降, 但是Variance会增加, 导致 Overfitting**
 
-当模型的复杂度不够的时候, 模型的准确度很差, 虽然Variance很低 但是有Underfitting
+当模型的复杂度不够的时候, **模型的准确度很差, 虽然Variance很低 但是有Underfitting**
 
-所以需要找到一个权衡的点
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+所以需要找到一个权衡(Bias-Variance Tradeoff)的点
