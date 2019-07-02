@@ -1,4 +1,4 @@
-半监督学习(Semi-supervised learning)
+## 半监督学习(Semi-supervised learning)
 
 半监督学习的Classification问题
 
