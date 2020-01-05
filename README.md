@@ -9,7 +9,7 @@
 
 # 计算机语言
 
-[Java 包含JavaSE, 多线程, 容器, Spring框架 等](Java/README.md)
+[Java 包含JavaSE, 多线程, 容器, Spring框架 等](java/README.md)
 
 [PHP]()
 
