@@ -21,7 +21,7 @@
 
 对所学的机器学习的相关课程 **用自己的话进行的归纳总结**
 
-[机器学习](机器学习/README.md)
+[机器学习](MachineLearning/README.md)
 
 
 
