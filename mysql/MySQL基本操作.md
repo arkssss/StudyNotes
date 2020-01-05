@@ -4,7 +4,7 @@
 
 
 
-## 一. DML, DDL, DCL 的区别
+## DML, DDL, DCL 的区别
 
 ### DML(data manipulation language）
 
@@ -28,7 +28,113 @@
 
 
 
-## 二. MySQL 数据库操作 DDL
+
+
+## MySQL 的数据类型
+
+通常只涉及到三种基本的数据类型
+
+- 字符
+- 数值
+- 日期
+
+### 1. 字符类型
+
+**注意 mysql 字符类型 一律只能用单引号阔起来**
+
+mysql中对于字符的制定**必须先声明该字段可能到达的最大的字节长度**
+
+注意后面设置的表示为 **字节**
+
+char 和 varchar 使用方式类似
+
+- char(5)
+- varchar (10)
+
+不同的是 char 最大长度可以设置为 255,  varchar 可以设置为 65535
+
+
+
+#### 字符集
+
+由于全世界的语种有很多, 所以对应的不同的字符集, 也对应不同的存储方式.
+
+- gbk : 简体中文字符集
+- 🌟 utf-8 : 全世界通用字符集, 一般的我们使用这个字符集, 可以使得世界范围内的字符自动解析, 而不用下载相应的语言包
+
+
+
+#### 文本数据
+
+如果存储数据大小超过了 64KB, 那么我们不能再使用 varchar了
+
+| 文本类型   | 最大存储字节 |
+| ---------- | ------------ |
+| tinytext   | 255          |
+| text       | 65535        |
+| mediumtext |              |
+| longtext   |              |
+
+
+
+### 2. 数值型
+
+包括了 **整数** 和 **浮点数** . 
+
+```sql
+/** 声明的时候, 如果是无符号的, 可以在后面加上unsigned标志, 从而增加数据的范围*/
+age smallint unsigned,
+```
+
+
+
+## 客户端登陆 MySQL
+
+#### 1. 查看数据库服务器是否运行
+
+注意要链接mysql数据库, 首先我们需要启动mysql服务器, 这是常识
+
+mysqld是一个可执行脚本, 用来启用我们的mysql服务器
+
+我们可以利用 ps命令查看mysql服务器 => mysqld 是否处于后台运行状态 : 
+
+```shell
+# mysqld 是运行在后台的mysql的服务器
+ps aux | grep mysqld
+```
+
+
+
+#### 2. 登陆mysql 客户端
+
+**普通的方式登陆**
+
+在保证mysqld运行在后台后, 我们便可以利用mysql命令链接上mysql数据库了
+
+```shell
+# 登陆 mysql 客户端
+mysql -u root -p
+
+# 登陆 mysql 的时候同时指定要使用数据库
+mysql -u root -p bank
+```
+
+
+
+**查看xml的方式登陆**
+
+这种方式我们可以通过 select 语句去返回对应的 XML 文件 
+
+```shell
+# xml 形式登陆
+mysql -u root -p --xml
+```
+
+
+
+
+
+## MySQL 数据库操作 DDL
 
 
 
@@ -66,7 +172,7 @@ show tables;
 
 
 
-## 三. MySQL 数据表操作
+## MySQL 数据表操作
 
 ### MySQL 表查看
 
@@ -347,7 +453,7 @@ alter table trip add constraint value_trip check(trip_length > 0)
 
 
 
-## 四. MySQL 记录操作 DML
+## MySQL 记录操作 DML
 
 一个MySQL表无非四种操作 : **增(insert), 删(delete), 改(uodate), 查(select)**. 下面我们一个一个来说
 
@@ -406,8 +512,6 @@ update person set age = 'fa' where person_id = 1;
 
 
 
-
-
 ### 删除数据
 
 使用 delete 语法
@@ -426,357 +530,7 @@ delete from person where person_id = 1;
 
 
 
-## 五. 查询入门
-
-现在开始 **详细** 的讲讲查询语句
-
-
-
-### select query 子句汇总
-
-一个 **select 查询** 一般 只包含 2~3 个字句, 但是标准下一个select拥有6个字句
-
-| 子句     | 作用                                                 |
-| -------- | ---------------------------------------------------- |
-| select   | 确定查询结果包含哪几列, 如果后面接 *, 则包含所有.    |
-| from     | 指出要提取的数据表                                   |
-| where    | 利用条件过滤不需要的记录                             |
-| group by | 用于对 **具有相同列值** 的行进行分组                 |
-| having   | 过滤不需要的组                                       |
-| order by | 按一列或者多列进行排序输出, 如果不加, 则对顺序不保证 |
-
-<center style='font-size:30px;color:red'> 注意在语句中, 我们的各个子句的先后顺序个上面的出现次序一致
-
-
-
-### select 子句
-
-select 可以选择这个结果集返回记录的哪些列, 或者用 * 表所有列.
-
-select 选择的同时, 我们可以 **对相应返回的列值做以下操作**:
-
-- 对列值加一个表达式, 比如:
-
-  ```sql
-  /* 对选择出来的 age 做乘100 操作 */
-  select age * 100 from person;
-  ```
-
-- 对列值加上内建函数, 比如:
-
-  ```sql
-  /* 将name所有的字母变为大写*/
-  select upper(name) from person;
-  ```
-
-- 给返回列加上别名
-
-  ```sql
-  /* 现在新的列名为 new_name, new_age*/
-  select upper(name) new_name, age*10 new_age from person;
-  
-  /* 同样使用 AS 关键字也是一样的效果*/
-  select upper(name) as new_name, age*10 as new_age from person;
-  ```
-
-- 删除某列中 **数值重复的记录**
-
-  注意使用 distinct 会大量的耗时, 我们应该 **尽量减少 distinct 的使用**
-
-  ```sql
-  /* 删除重复*/
-  select distinct food from favorite_food;
-  ```
-
-### from 子句
-
-from 子句定义了表查询中所使用的表
-
-
-
-<center style='font-size:20px'> 表的概念及种类
-
-
-
-**定义, 表的该脸并不局限于我们create的表, 而包括以下三个概念**
-
-- 永久表 : 通过 create 创建的表
-- 临时表 : 通过查询语句 select 返回的表, 也就是说, 我们使用 **select查询后的结果也是一个表**
-- 虚拟表 : 使用视图 create view 子句所创建的 **视图**
-
-
-
-<hr>
-
-**我们来看看什么是 临时表, 虚拟表**
-
-临时表 (子表查询产生的表)
-
-```sql
-/* 注意我们要给子表查询的结果命名 e.g: 取名为 e */
-/* 然后我们才能利用 e.age的形式去选择里面的列   */
-select e.age from (select * from person) e;
-```
-
-虚拟表 (通过视图创建)
-
-视图是什么 : **视图就是存储于数据字典的数据查询** 注意我们的视图并没有任何数据, 而只是一个定义. 我们调用他的时候, 服务器也只是简单的去掉用这个定义.
-
-```sql
-/* 定义视图 */
-create view person_v as select age from person;
-
-/* 此时person_v 就被定义为这个查询*/
-/* 从而我们直接对视图进行查询即可 */
-select * from person_v;
-
-/* 删除一个视图*/
-drop view person_v;
-```
-
-- 视图会存在于我们的真实表中, 即可以通过 show tables 显示出来
-
-<hr>
-
-with 语句
-
-和 视图类似的, 我们还有 **with 语句**, 也可以创建一个虚拟表, 但是show tables不能显示
-
-```sql
-/* 下面我们就可以用 table_name 代替 select * from account 语句*/
-with table_name as (select * from account)
-```
-
-<center style='font-size:30px ;color:red'> MySQL 并不支持 with语句
-
-
-
-
-
-<center style='font-size:20px'> 连接表
-
-
-
-我们可以在查询的时候合并多个表, 然后对这个合并表执行查询操作. 比如 :
-
-```sql
-/* 通过person_id 连接 person 表 和 favorite_food 表*/
-/* ... inner join ... on... */
-select person.person_id, person.age, favorite_food.food from 
-person inner join favorite_food 
-on
-person.person_id = favorite_food.person_id;
-```
-
-**此时返回的就是 两个表的合并表**
-
-由于我们在字段的选择以及其他的地方我们需要 **指定我们选择的是哪一个表 e.g person.person_id**
-
-为了简便操作, 我们对其使用别名 : 
-
-```sql
-/* 通过person_id 连接 person 表 和 favorite_food 表*/
-/* ... inner join ... on... */
-select p.person_id, person.age, f.food from 
-person p inner join favorite_food f
-on
-p.person_id = f.person_id;
-
-/* 当然也可以加 AS 增加可读性*/
-select p.person_id, person.age, f.food from 
-person AS p inner join favorite_food AS f
-on
-p.person_id = f.person_id;
-```
-
-
-
-### where 子句
-
-where 语句中可以用到的符号
-
-#### 比较运算符
-
-- = 等于
-
-- <> 或者 != 都表示不等于
-
-- <=> 安全的等于
-
-  ```sql
-  /* 返回null */
-  select null=null
-  
-  /* 返回1 */
-  select null<=>null
-  ```
-
-- <= 
-
-- <
-
-- \>=
-
-- \>
-
-#### 逻辑运算符
-
-可以通过条件限定查找的记录是什么, 主要就是两个逻辑符号:
-
-- AND
-
-- ALL , ANY
-
-  all 运算符会和结果集的所有的元素比较一遍
-
-  ```sql
-  /* 表示要大于所有的结果集中的元素 */
-  /* 大于所有才为真*/
-  select * from account where blance > all (1, 2, 3)
-  
-  /* 大于一个就为真*/
-  select * from account where blance > any (1, 2, 3)
-  ```
-
-- NOT 
-
-- EXISTS, NOT EXISTS
-
-  多用于判断 **子查询中返回的数据集存在与否**
-
-  ```sql
-  /* 如果存在子查询的数据集, 那么就之前父查询 */
-  select * from account where exists (select * from product where product_cd = 'chk')
-  ```
-
-- OR
-
-- IN  , NOT IN
-
-  可以限定一个范围 e.g:
-
-  ```sql
-  /* 选择年纪为18, 19, 20的人*/
-  
-  select * from person where age in (18, 19, 22);
-  ```
-
-- LIKE 模糊查找 
-
-  %STRING% 匹配表示 字符串含有STRING且左边, 右边的字符任意
-
-  %STRING 匹配表示, 结尾必须为STRING, 左边字符任意
-
-  STRING% 匹配表示, 开头必须为STRING, 右边字符任意
-
-  ```sql
-  /* 选择名字中带有fang的人 */
-  select * from person where name like '%fang%';
-  ```
-
-通过逻辑符号可以执行多个限定条件
-
-
-
-#### group by 和 having子句
-
-group by 可以对 **结果集进行分组** , 分组的依据就是 **如果group by后面的字段值相等, 那么就可以归为一组**, e.g.
-
-```sql
-/* 语法 */
-/* aggregate_function 为聚合函数 */
-SELECT column_name, aggregate_function(column_name)
-FROM table_name
-WHERE condition
-
-/* 在结果集中, column_name1相同的列, 被归位一组 */
-/* 然后通过select 里面的聚合函数, 对这些组聚合操作 */
-GROUP BY column_name
-
-/* having 语句加上筛选项, 对结果进行过滤, having 里面一般都是聚合函数的一些逻辑条件 */
-having aggregate_function(column_name) condition
-```
-
-- group by 和 having 一般是一起出现的.
-- group by 语句一般用来结合 **聚合函数** 一起使用的
-
-##### having 子句 和 where 子句的区别
-
-- Where 是一个 **约束声明** ，使用Where约束来自数据库的数据，Where是在结果返回之前起作用的，**Where中不能使用聚合函数**
-- Having是一个 **过滤声明**，是在查询返回结果集以后对查询结果进行的过滤操作，**在Having中可以使用聚合函数**
-
-
-
-#### 关于聚合函数
-
-1. 常用的聚合函数有 : 
-
-- count() 计数
-- sum() 求和
-- avg() 平均数
-- max() 最大值
-- min() 最小值
-
-1. 注意聚合函数不一定只能在 group by 语句中才能使用
-2. count(*) 会统计所有的记录,且不会忽略null记录,  count(val)会自动的忽略null记录
-
-
-
-#### 关于Group by 的几点问题:
-
-1. select 子句选择的是一定是 : 
-
-   - group by 的字段
-   - 包含在聚合函数其他列
-
-   **即 select 不能选择另一个不是 group by 的列**
-
-   ```sql
-   /* 这种是不允许 ❌ 的 */
-   select a from user group by b
-   ```
-
-1. 多个字段 group by
-
-   ```sql
-   /* 可以选择的字段, 仅限于group by的字段中  */
-   /* 此时只有 a, b 都一样, 才会被当做一个分组 */
-   select a, b from user group by a, b;
-   ```
-
-
-
-### order by 子句
-
-**直接对某一列进行排序**
-
-可以使得结果根据某个字段进行排序, 同时可以指定是 **升序asc** , 还是 **降序desc**
-
-```sql
-select * from person order by age;
-/* 不指定默认为升序 */
-/* 上下结果相同 */
-select * from person order by age asc; 
-
-/* 结果降序 */
-select * from person order by age desc; 
-```
-
-
-
-**依据两列及以上进行排序**
-
-```mysql
-/* 例如依据 age 和 name 进行排序 */
-/* 注意先对列明重命名 */
-select age a, name n from person order by a, n
-```
-
-
-
-
-
-## 六. 高级操作
+## 高级操作
 
 ### 插入语句实现在插入的时候检查是否有重复的情况, 否则不插入
 
@@ -810,6 +564,111 @@ on deplicate key update id = 1;
 
 
 
+
+## MySQL 内建函数及命令
+
+### 一般函数
+
+#### 1. 查看当前的时间
+
+```sql
+/* mysql 使用的可以直接不加from限定*/
+select now();
+
+/* 但是其他一些关系型数据库 e.g. orcale 就必须加上一个限定的表格才能完成选择语句*/
+/* 所以我们需要给它加上一个特殊的表 dual*/
+select now() from dual;
+```
+
+
+
+#### 2.查看当前版本
+
+```sql
+select version();
+```
+
+
+
+#### 3.查看当前用户
+
+```sql
+select user();
+```
+
+
+
+##### 4.查看当前数据库
+
+```sql
+select database();
+```
+
+
+
+### 行函数 Row function
+
+**针对一个记录的操作**
+
+#### 5. 将字母全部转为大写
+
+```sql
+select upper(name) from person		
+```
+
+
+
+#### 6. 截取函数
+
+```sql
+/* 
+可以截取 value 的后 number 个值
+注意不管 value 是字符类型, 还是数字类型, 都可以使用
+right(10, 1) => 0
+*/
+select right(value, number) from table_name
+
+/*
+当然对于字符类型的, 我们还可以使用 substr 函数
+表示截取 name 开始的 1到3个字符
+‘fangzhou’ => 'fan'
+*/
+select substr(name, 1, 3) from person
+```
+
+
+
+### 组函数(聚合函数) **group function** 
+
+针对一组数据的操作
+
+#### 7. 统计一组数据的个数
+
+```sql
+/* 统计person所有记录的个数 */
+select count(*) from person
+```
+
+#### 8. 对所有的记录的某一列求和
+
+```sql
+/* 对所有记录的age求和 */
+select sum(age) from employee;
+```
+
+#### 9. 对指定记录列求平均值
+
+```sql
+/* 求平均*/
+select avg(age) from preson;
+```
+
+#### 10. 求最大值
+
+```sql
+/* 求最大值*/
+select max(age) from preson;
+```
 
 
 

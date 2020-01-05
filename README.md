@@ -7,13 +7,21 @@
 
 
 
+# 计算机基础
+
+[数据结构与算法]
+
+[常见算法]
+
+
+
 # 计算机语言
 
-[Java 包含JavaSE, 多线程, 容器, Spring框架 等](java/README.md)
+[Java](java/README.md) 
 
-[PHP]()
+[PHP]
 
-[C++]()
+[C++](C++/README.md)
 
 
 
@@ -25,39 +33,31 @@
 
 
 
-
-
 # Linux
 
-
-
-
+[Linux基础](Linux/README.md)
 
 
 
 # MySQL 数据库
 
-
-
-
+[MySQL基础](MySQL/README.md)
 
 
 
 # 缓存层
 
-[Redis]()
+[Redis](Redis/Redis.md)
 
-[MongoDB]()
-
-
-
-
+[MongoDB](MongoDB/MongDB.md)
 
 
 
 # 中间件
 
+[消息队列概述](中间件/消息队列/消息队列概述.md)
 
+[RabbitMQ](中间件/消息队列/RabbitMQ.md)
 
 
 
@@ -65,27 +65,25 @@
 
 # 分布式系统设计
 
-[PRC 远程调用]()
+[PRC 远程调用]
 
-[Zookeeper]()
+[Zookeeper]
 
+[Nginx 负载均衡]
 
-
-
+[分布式锁]
 
 
 
 # 大数据
 
-
-
-
+[大数据基本概念]
 
 
 
 # 设计模式
 
-
+[基本设计模式]()
 
 
 
@@ -93,3 +91,4 @@
 
 [Git 常用命令]()
 
+[vim](Vim/Vim.md)

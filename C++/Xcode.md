@@ -15,5 +15,3 @@ To work with the files, you will have to specify just file names, e.g.
 in_file.open("inputFile.txt"); no path is necessary.
 ~~~
 
-
-
