@@ -39,7 +39,7 @@
 
 # Linux
 
-[Linux基础](Linux/README.md)
+[Linux基础](linux/README.md)
 
 
 
