@@ -22,7 +22,7 @@
 
 [Java](java/README.md) 
 
-[PHP]
+[PHP](PHP/README.md)
 
 [C++](C++/README.md)
 
@@ -96,3 +96,5 @@
 [Git 常用命令]()
 
 [vim](Vim/Vim.md)
+
+[npm](npm/npm.md)
