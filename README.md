@@ -12,9 +12,9 @@
 
 # 计算机基础
 
-[数据结构与算法]
+[数据结构与算法 (exam version)](datastructure/ds.md)
 
-[常见算法]
+[常见算法](algorithm/README.md)
 
 
 
