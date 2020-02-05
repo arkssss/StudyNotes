@@ -111,6 +111,14 @@ $git checkout -f
 
 
 
+## 5. 删除 Git 仓库
+
+要删除 git 仓库, 只需要删除项目目录下的 `.git/`下的所有文件即可
+
+~~~shell
+$rm -rf .git/
+~~~
+
 
 
 
@@ -211,6 +219,8 @@ then
 fi
 ' --tag-name-filter cat -- --branches --tags
 ~~~
+
+
 
 
 
