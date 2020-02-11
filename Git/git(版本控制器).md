@@ -96,7 +96,7 @@ $git branch -d test
 
 
 
-## 4. 抛弃此次修改
+## 4. 抛弃此次所有修改
 
 ~~~shell
 # 此次修改后, 想撤销此次的所有修改
@@ -118,6 +118,25 @@ $git checkout -f
 ~~~shell
 $rm -rf .git/
 ~~~
+
+
+
+## 6. Git 检出文件
+
+~~~shell
+# 撤销本地缓存区修改, 使得该文件回到上次提交的时候
+$git checkout -- filename
+
+# for example
+$git checkout app/Http/Controllers/PagesController.php
+
+# 抛弃工作区域的所有修改
+$git checkout . 
+~~~
+
+
+
+
 
 
 
