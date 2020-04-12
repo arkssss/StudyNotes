@@ -45,6 +45,21 @@
    $npm run watch-poll
    ~~~
 
+## react 安装
+
+
+
+~~~shell
+# 安装reactJS
+> $php artisan preset react
+
+> $npm install
+
+# 编译
+> npm run dev
+~~~
+
+
 
 ## fortawesome 安装
 

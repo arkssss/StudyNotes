@@ -4,6 +4,8 @@
 
 ## 表单验证
 
+### 快速验证
+
 > [表单验证](https://learnku.com/docs/laravel/6.x/validation/5144)
 
 表单验证是一个接受表单数据的常用功能, 一般在 `Controller`层进行验证. 在 Laravel 中, 验证表单的方法如下 :
@@ -21,6 +23,113 @@ public function signin(Request $request){
 
 - 验证成功 : Controller 继续正确执行
 - 验证失败 : HTTP Get 请求则进行一个重定向响应, 如果为 AJAX 则返回错误的 Json 信息
+
+
+
+### 验证表单请求
+
+> [验证请求表单](<https://learnku.com/docs/laravel/6.x/validation/5144#form-request-validation>)
+>
+> 面对更复杂的验证情境中，你可以创建一个「表单请求」来处理更为复杂的逻辑。表单请求是包含验证逻辑的自定义请求类。可使用 Artisan 命令 `make:request` 来创建表单请求类
+
+```shell
+# 自定义的用于处理用户更新数据的表单验证
+# 运行后会自动在 \Http\Requests 下面创建 UserUpdateRequest 文件
+php artisan make:request UserUpdateRequest
+```
+
+生成的 `UserUpdateRequest` 文件如下:
+
+~~~php
+<?php
+// 自定义表单验证
+    
+    
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class UserUpdateRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {	
+        return false;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     * 核心的验证规则
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            // 例如对前端传入的 name, emial, introduction 进行验证
+            'name' => 'required|between:3,25|regex:/^[A-Za-z0-9\-\_]+$/|unique:users,name,' . Auth::id(),
+            'email' => 'required|email',
+            'introduction' => 'max:80',
+        ];
+    }
+    
+    
+    // 如果不规定则为默认
+    public function messages()
+    {
+        // 自定义返回消息
+        return [
+            'name.unique' => '用户名已被占用，请重新填写',
+            'name.regex' => '用户名只支持英文、数字、横杠和下划线。',
+            'name.between' => '用户名必须介于 3 - 25 个字符之间。',
+            'name.required' => '用户名不能为空。',
+        ];
+
+    }
+}
+
+~~~
+
+其中验证规则按照 '|' 的形式隔开
+
+| 规则                                | 含义                                                         |
+| ----------------------------------- | ------------------------------------------------------------ |
+| required                            | 必填不为空                                                   |
+| between:min,max                     | 长度位于 min, max 之间                                       |
+| regex:                              | 正则验证                                                     |
+| email                               | 邮件格式                                                     |
+| max:                                | 最大长度                                                     |
+| unique:table,column,except,idColumn | 在 table 数据表里检查 column ，除了 idColumn 为 except 的数据。 |
+
+~~~php
+// 调用验证
+
+
+// IOC 自动注入
+public function update(UserUpdateRequest $request){
+    
+    // $data 即为验证后的数据
+    $data = $request->all()
+    
+}
+~~~
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -230,6 +339,40 @@ class SessionsController extends Controller
 ~~~php
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 ~~~
+
+
+
+
+
+### signed 中间件实现验证签名
+
+
+
+
+
+
+
+### throttle 中间件限制请求次数
+
+~~~php
+/* 
+	throttle 为laravel默认注册的局部中间件
+*/
+
+
+/* 
+	表示本控制器中的register方法, 限制在1分钟之内只能请求小于等于6次
+*/
+$this->middleware("throttle:6,1")->only("register");
+~~~
+
+
+
+
+
+
+
+
 
 
 
@@ -599,6 +742,152 @@ Route::get('email/verify/{id}/{hash}', 'Auth\VerificationController@verify')->na
 Route::post('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
 
 ```
+
+
+
+## 路由签名
+
+> [路由签名](<https://learnku.com/laravel/t/9404/laravel-56-new-function-routing-signature>)
+>
+> 假设我们有一套让用户快速回复活动计划的应用程序，我们希望发送 email 让所有用户快速回复 “参加” 还是 “不参加”。然而我们并不希望强迫用户在程序已经退出登录的情况下需要重新登录才能作出回复。
+>
+> 即可以在不用登陆的情况下, 使用URL安全的发送带有用户身份的信息.
+
+路由签名实现分为两个步骤 
+
+1. **URL生成 :**
+
+   ~~~php
+   /* 使用URL服务生成 */
+   use \Illuminate\Support\Facades\URL;
+   
+   /* 
+   	便是生成的URL签名字段
+   	Signature 是通过
+           1. event.rsvp 路由
+           2. id 25
+           3. user 100
+           4. response yes
+           5. 时间一个小时内 
+   	这些信息加密得到的
+   */
+   $url = 
+       URL::temporarySignedRoute('event.rsvp', now()->addHour(), [
+           'id' => 25,
+           'user' => 100,
+           'response' => 'yes'
+       ]);
+   
+   /* 将此$url 返回给client */
+   return $url
+   ~~~
+
+2. **定义路由接受 :**
+
+   ~~~php
+   /* 
+   	web.php 中定义路由接受验证生成的URL 
+   */
+   
+   /* 
+   	此时Http请求在被rsvp方法处理的时候, 会自动调用 signed 中间件对签名进行验证
+   */
+   Route::get('event/{id}/rsvp/{user}/{response}')->name("event.rsvp")->middleware('signed');
+   ~~~
+
+
+
+## 上传图片
+
+
+
+前端部分需要在 form标签 属性中加入，否则上传的仅为图片名称
+
+~~~html
+enctype="multipart/form-data"
+~~~
+
+后台部分
+
+~~~php
+<?php
+// 图片上传的工具类
+// 图片作为 web 中可以访问的资源，一般被放置到 /public/ 文件夹下
+// 且 url/ 访问的都是 public/下的资源，url/uploads/ 对应到服务器上即为 url/public/upoloads/ 因为其他文件对外部并不开放
+
+namespace App\Handlers;
+use  Illuminate\Support\Str;
+
+class ImageUploadHandler
+{
+
+    // 只允许以下后缀名的图片文件上传
+    protected $allowed_ext = ["png", "jpg", "gif", 'jpeg'];
+	
+    // save 函数对上传的图片进行简单的处理，且移动到指定的位置
+    public function save($file, $folder, $file_prefix)
+    {
+        // 构建存储的文件夹规则，值如：uploads/images/avatars/201709/21/
+        // 文件夹切割能让查找效率更高。
+        $folder_name = "uploads/images/$folder/" . date("Ym/d", time());
+
+        // 文件具体存储的物理路径，`public_path()` 获取的是 `public` 文件夹的物理路径。
+        // 值如：/home/vagrant/Code/larabbs/public/uploads/images/avatars/201709/21/
+        $upload_path = public_path() . '/' . $folder_name;
+
+        // 获取文件的后缀名，因图片从剪贴板里黏贴时后缀名为空，所以此处确保后缀一直存在
+        $extension = strtolower($file->getClientOriginalExtension()) ?: 'png';
+
+        // 拼接文件名，加前缀是为了增加辨析度，前缀可以是相关数据模型的 ID
+        // 值如：1_1493521050_7BVc9v9ujP.png
+        $filename = $file_prefix . '_' . time() . '_' . Str::random(10) . '.' . $extension;
+
+        // 如果上传的不是图片将终止操作
+        if ( ! in_array($extension, $this->allowed_ext)) {
+            return false;
+        }
+
+        // 将图片移动到我们的目标存储路径中
+        $file->move($upload_path, $filename);
+
+        return [
+            'path' => config('app.url') . "/$folder_name/$filename"
+        ];
+    }
+}
+~~~
+
+~~~php
+// 在对应的 controller 中既可以使用 IOC 的方式进行注入
+public fcuntion myFunc(ImageUploadHandler $imageUploadHandler){
+    // ...
+}
+~~~
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

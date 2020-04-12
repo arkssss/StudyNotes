@@ -8,8 +8,8 @@
 
 ## Laravel
 
-* [Laravel MVC 架构](php-laravel/Laravel.md)
-* [Laravel 内核](php-laravel/Laravel-kernel.md)
+* [Laravel MVC 架构](php-laravel/laravel.md)
+* [Laravel 内核](php-laravel/laravel-kernel.md)
 * [laravel 前端](php-laravel/laravel-front.md)
 * [laravel 系统函数](php-laravel/laravel-sys-function.md)
 * [laravel 综合话题](php-laravel/laravel-comprehensive-topic.md)
@@ -22,7 +22,7 @@
 
 # 关于环境搭建
 
-- [基于 Homestead 环境搭建](php-laravel/Laravel-env.md)
+- [基于 Homestead 环境搭建](php-laravel/laravel-env.md)
 
 
 
