@@ -136,6 +136,21 @@ $git checkout .
 
 
 
+## 7. 回滚
+
+~~~shell
+# 硬回滚
+# 注意这个操作会覆盖掉本地的所有文件，使得版本回退到 commit id 中，且之后的 commit 信息不在出现，谨慎使用。
+$git reset --hard <commit id>
+
+~~~
+
+
+
+
+
+
+
 
 
 

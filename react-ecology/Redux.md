@@ -227,3 +227,233 @@ class App extends Component{
 
 
 
+### actionType 拆分
+
+~~~javascript
+/* 以input 框输入事件举例 */
+inputHandleChange(e){
+    /* 定义action */
+    const action = {
+        'type' : "input_value_change",
+        'value': e.target.value
+    }
+    /* 分发action, store 提供的接口，但是处理者为 reducer */
+    store.dispatch(action)
+}
+
+// 这样的 action.type 的方式会造成死数据，不利于维护.
+~~~
+
+抽离 actionType 
+
+~~~javascript
+/* actionType.js */
+
+// 定义 ActionTypes 
+export const INPUT_VALUE_CHANGE = "1"
+export const BUTTON_CLICK = "2"
+export const ITEM_CLICK = "3"
+~~~
+
+
+
+### actionCreator 拆分
+
+同样我们讲 action 的定义抽离
+
+~~~javascript
+/* actionCreator.js */
+
+// 文件统一创建 action
+import {INPUT_VALUE_CHANGE, BUTTON_CLICK, ITEM_CLICK} from './actionTypes'
+
+
+/* 框输入动作 */
+export const inputHandleChangeAction = (value) => {
+    return {
+        'type' : INPUT_VALUE_CHANGE,
+        'value': value
+      }
+}
+
+/* 按钮点击动作 */
+export const buttonHandlerClickAction = (value) => {
+    return {
+        'type' : BUTTON_CLICK,
+        'value': value
+    }
+}
+
+/* 按钮点击动作 */
+export const itemHandlerClickAction = (value) => {
+    return {
+        'type' : ITEM_CLICK,
+        'value': value
+    }
+}
+~~~
+
+在调用的时候，便可以直接
+
+~~~javascript
+import { inputHandleChangeAction } from './store/actionCreator'
+
+
+/* input 框输入事件 */
+inputHandleChange(e){
+
+    const inputValue = e.target.value
+
+    store.dispatch(inputHandleChangeAction(inputValue))
+
+}
+~~~
+
+# 中间件
+
+## 中间件定义
+
+`redux` 中间件的定义在 `action` 和 `store` 中间, 是对 `dispathch` 方法的升级
+
+<img src='image/redux-middleware.png' />
+
+
+
+
+
+## Redux-thunk
+
+> With a plain basic Redux store, you can only do simple synchronous updates by dispatching an action. Middleware extend the store's abilities, and let you write async logic that interacts with the store.
+>
+> [redux-thunx-github](<https://github.com/reduxjs/redux-thunk>)
+
+
+
+### 安装
+
+~~~shell
+$yarn add redux-thunk
+~~~
+
+
+
+### 引入
+
+项目只有一个中间件的时候，可以如下引入
+
+~~~javascript
+/* 引入 thunk 部分在 stroe 的创建文件中，即 store/index.js */
+
+// 公共存储仓库, 全局唯一
+/* applyMiddleware 可以使用中间件(redux-thunk) */
+import {createStore, applyMiddleware} from  'redux'
+import reducer from './reducer'
+/* 使用 redux-thunk 中间件进行AJAX */
+import thunk from 'redux-thunk'
+
+const store = createStore(
+    reducer,
+    /* redux 中间件定义 */
+    applyMiddleware(thunk)
+)
+
+export default store;
+~~~
+
+项目有多个中间件的时候，需要如下引入
+
+~~~javascript
+// 公共存储仓库, 全局唯一
+/* applyMiddleware 可以使用中间件(redux-thunk) */
+import {createStore, applyMiddleware, compose} from  'redux'
+import reducer from './reducer'
+/* 使用 redux-thunk 中间件进行AJAX */
+import thunk from 'redux-thunk'
+
+/* 
+    这种写法让 redux 同时支持
+    redux-devtools,
+    thunk
+    两个中间件
+*/
+const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__?
+window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({}) : compose
+
+/* redux 中间件定义 */
+const enhancer = composeEnhancer(
+    applyMiddleware(thunk)
+)
+
+// window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+const store = createStore(
+    reducer,
+    enhancer
+)
+
+export default store;
+~~~
+
+
+
+### Redux-thunk 中间件 实现 AJAX
+
+如果不使用 redux-thunk 那么我们的 actionCreator 只能返回一个对象
+
+~~~javascript
+/* 框输入动作 */
+export const inputHandleChangeAction = (value) => {
+    return {
+        'type' : INPUT_VALUE_CHANGE,
+        'value': value
+      }
+}
+~~~
+
+redux-thunk 可以使得我们的 actionCreator 返回一个函数, 从而在这个函数中进行一步 Ajax
+
+~~~javascript
+/* 不使用 redux-thunk 则action只能返回一个对象 */
+/* redux-thunk 可以使得 action creator 返回一个函数 */
+export const getTodoList = ()=>{
+    return (dispatch)=>{
+        axios.get('/api/getInit').then((res)=>{
+            // success
+            dispatch(todoListInitData(res.data))      
+          }).catch(()=>{
+            // error
+            console.log('error')
+          })
+    }
+}
+~~~
+
+调用，从而实现将 Ajax 操作封装到 `actionCreator` 中
+
+~~~javascript
+/* 组件挂载后 */
+componentDidMount(){
+    /* 利用 redux-thunk 返回一个异步 action */
+    const action = getTodoList()
+    
+    store.dispatch(action)
+}
+~~~
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

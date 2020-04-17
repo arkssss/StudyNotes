@@ -374,7 +374,7 @@ componentDidMount(){
 }
 ~~~
 
-	### 更新周期
+### 更新周期
 
 指将`React`中的两个变量 `Props` 和 `State` 发生变化的时候的周期函数
 
@@ -547,7 +547,6 @@ yarn add axios
 ~~~javascript
 import axios from 'axios'
 
-
 // ajax 操作
 componentDidMount(){
     axios.get('/api/todoList') 
@@ -567,53 +566,79 @@ componentDidMount(){
 }
 ~~~
 
-# JavaScript 基础
 
-## 数组
 
-### 数组基本操作
+# 项目拆分
+
+## 组件逻辑和UI拆分
+
+组件 UI 和 逻辑可以分别拆分为两个文件，例如: 
 
 ~~~javascript
-// CRUD 
-var arr = ['hello', 'world', 'React']
+/* componentLogic.js */
 
+import React, {Component} from 'react';
+import componentUI from './componentUI'
 
-// ---------------------- 新增元素
+class componentLogic extends Component{
+  
+    constructor(props){
+        super(props)
 
-// 写法1
-arr.push('Java')
+        this.func = this.func.bind(this)
+    }
 
-// 写法2 ...为扩展运算符
-[...arr, 'Java']
+    render(){
+        return (
+            <componentLogicUI 
+            
+            // 通过这种方式向 UI 组件传值
+            func = {this.fuc}
+            />
+        );
+      }
+    
+    func(){
+       // code ...
+    }
+}
+export default componentLogic;
+~~~
 
+抽离的 UI 部分可以定义为一个 **无状态UI组** 相比于普通的组件，无状态组件加载销量更高，因为没有了一些生命周期函数.
 
-// 删除元素
-// index 为需要删除的元素的下标，1为删除一个
-arr.splice(index, 1)
+~~~javascript
+/* componentUI.js */ 
+
+// 抽离 componentUI 的 UI 组件
+// 只负责定义 UI， 不涉及逻辑
+import React from 'react'
+
+/* 无状态UI组件，相比于 Component 类，无状态组件新能更高 */ 
+const componentUI = (props) => {
+    return(
+		<div props.func>
+        	...
+        </div>
+    )
+}
+
+export default componentUI
 ~~~
 
 
 
-### 遍历数组
-
-~~~javascript
-arr = ['js', 'php', 'java']
 
 
-arr.map((item, index) => {
-    console.log(item)
-})
+# 扩展
+
+### `styled-components`
+
+~~~shell
+$yarn add styled-components
 ~~~
 
-
-
-
-
-
-
-
-
-
+这个扩展可以使得
 
 
 
