@@ -632,13 +632,196 @@ export default componentUI
 
 # 扩展
 
-### `styled-components`
+## `styled-components`
+
+这个扩展可以使得我们可以用 `js` 的方式引入 `css` 文件
+
+`styled-components` 可以对单独组件赋予样式，避免组件件样式冲突
+
+### 安装
 
 ~~~shell
 $yarn add styled-components
 ~~~
 
-这个扩展可以使得
+### 全局样式
+
+> 使用 css reset 定义全局样式
+>
+> http://meyerweb.com/eric/tools/css/reset/ 
+
+~~~javascript
+/* 定义 */
+import { createGlobalStyle } from 'styled-components'
+
+/* css 样式 */
+export const Globalstyle = createGlobalStyle`
+	
+body{
+	
+}
+`
+~~~
+
+~~~javascript
+/* 引入 */
+import {Globalstyle} from './style.js';
+
+function App() {
+  return (
+    <div className="App">
+      /* 全局样式 */
+      <Globalstyle />
+      <Header />
+    </div>
+  );
+}
+~~~
+
+
+
+### 组件局部样式
+
+~~~javascript
+/* 定义 */
+import styled from 'styled-components'
+
+/* 为 div 定义一个样式名为 HeaderWrapper */
+export const HeaderWrapper = styled.div`
+    position : relative;
+    height : 56px;
+    border-bottom : 1px solid #f0f0f0;
+`
+~~~
+
+~~~javascript
+/* 引入 */
+import {
+    HeaderWrapper
+}from './style'
+
+class Header extends Component{
+    render(){
+        return (
+            <HeaderWrapper>header</HeaderWrapper>
+        )
+    }
+}
+~~~
+
+
+
+### 选择器 `&` 和 `.`
+
+~~~html
+<List calssName = 'Wrapper'>
+    <Item className = 'Wrapper_Item'/>
+</List>
+~~~
+
+~~~js
+import styled from 'styled-components'
+
+/* 如果在父元素中修饰子元素的样式则用 . */
+export const List = styled.div`
+	...
+
+    .Wrapper_Item{
+        ...
+    }
+`
+
+/* 如果在是自己规定自己的某class的样式则用 &. */
+export const Item = styled.div`
+	...
+
+    &.Wrapper_Item{
+    ...
+    }
+`
+~~~
+
+
+
+
+
+## `react-transition-group`
+
+> [react-transition-group](<https://reactcommunity.org/react-transition-group/>) 是一个 react 动画扩展库
+
+### 安装 
+
+~~~shell
+$yarn add react-transition-group
+~~~
+
+
+
+### 入门使用
+
+~~~javascript
+import { CSSTransition } from 'react-transition-group'
+
+<Wrapper>
+/* 使用 CSSTransition 包裹需要动画效果的元素中 */
+<CSSTransition
+    timeout = {200}
+    in = {this.state.focused}
+    classNames = 'slide'
+>
+	<ItemNeedTransition>
+</CSSTransition>
+</Wrapper>
+~~~
+
+这里的 `CSSTransition` 需要定义一些初始属性：
+
+* `timeout` 定义动画的是时间
+* `in` 是一个 `bool` 值，当为 `true` 的时候，启动动画的 `enter` 效果，当为 `false` 时，启动动画的 `exit` 效果
+* `className` 定义在 `css` 中修饰的属性前缀
+
+**动画的定义**
+
+~~~javascript
+export const Wrapper = styled.div`
+		
+	/* 这两个样式定义当in为true 时候的动画 */
+	.slide-enter {
+        transition : all .2s ease-out
+    }
+    
+    .slide-enter-active{
+        width : 250px;
+    }
+
+
+	/* 这两个样式定义当in为false 时候的动画 */
+    .slide-exit {
+        transition : all .2s ease-out
+    }
+    .slide-exit-active{
+        width : 160px;
+    }
+`
+~~~
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

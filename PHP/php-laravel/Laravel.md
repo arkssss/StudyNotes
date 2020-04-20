@@ -427,6 +427,44 @@ class User extends Model
 }
 ~~~
 
+### 创建一个 `Model`
+
+~~~shell
+# 新增一个 Model
+$ php artisan make:model Models/Blog 
+~~~
+
+ ### `Attribute` 字段访问
+
+~~~php
+/* 
+	模型对象中将所有访问的字段存储在其的 Attribute 成员数组中
+*/
+
+# 使用成员变量的形式访问
+$user->name 
+
+# 实际上就是获得其 attribute['name'];
+    
+# 注意并不能直接在 Model 外部用这种方式访问，因为 attribute 为 protected 变量，并不能被访问到
+❌ $user->attribute['name']
+~~~
+
+~~~php
+/* 事实上，在 $user->name 的方式中，Model类会调用魔术方法 __get() */
+
+/**
+     * Dynamically retrieve attributes on the model.
+     *
+     * @param  string  $key
+     * @return mixed
+*/
+public function __get($key)
+{
+    return $this->getAttribute($key);
+}
+~~~
+
 ### `Fillable` 成员变量
 
 在新增记录的时候, 需要注意在 `Model`内部指出, 哪些是可以被更新的. 即规定 fillable 变量. 否则会导致插入失败
@@ -455,6 +493,63 @@ class PostCategory extends Model
     public $timestamps = false;
 }
 ~~~
+
+### `getter`  访问器
+
+> [Laravel 访问器](<https://learnku.com/docs/laravel/7.x/eloquent-mutators/7502#defining-an-accessor>)
+
+访问器可以修改模型中某些字段的展示形式，例如对于数据库中的日期字段，我们可以使用 getter 对其进行更友好展现的修改.
+创建一个访问器需要遵循一定的命名规则，例如:
+`first_name => getFirstNameAttribute();`
+`updated_at => getUpdatedAtAttribute();`
+
+~~~php
+/* 以日期显示为例: */
+public Post extends Model{
+	
+// ...
+    
+/* 
+	updated_at 修改器 
+	将字符串形式的时间信息修改为更加人类有好的形式
+*/
+public function getUpdatedAtAttribute(){
+	
+    /* 只有在 Model 内部才能使用 attributes[''] 的形式访问，因为其为 protected */
+    return Carbon::parse($this->attributes['updated_at'])->diffForHumans();
+
+}
+}
+~~~
+
+~~~php
+/* 
+	访问器会直接修改对应字段在 Attribute 数组中的值
+	
+	所以直接用属性的形式调用即可获得被 getter 处理后的值
+*/
+$post->updated_at;
+~~~
+
+~~~php
+/* 
+	如果想访问原始值
+	在 Model 类中还有一个数组 original 存储所有的原始值
+*/
+
+public Post extends Model{
+    
+    public function getOrig(){
+        
+        /* 返回 protected 变量 */
+        return $this->original;
+    }
+}
+~~~
+
+
+
+
 
 
 
@@ -486,18 +581,6 @@ $user = User::where('name', 'fz')->get();
 
 
 
-## 新增模型
-
-在 `Eloquent` 规则中, 数据模型名称对应的单数形式的数据表, 例如新增一个 `Blog` 模型:
-
-~~~shell
-> php artisan make:model Models/Blog 
-~~~
-
-
-
-
-
 ## Model REPL - tinker
 
 即直接用命令的方式进行数据库操作.
@@ -509,7 +592,7 @@ $user = User::where('name', 'fz')->get();
 >>> ...
 ~~~
 
-## 新增记录
+### 新增记录
 
 ~~~shell
 # App\Models\User 表示操作的模型
@@ -537,7 +620,6 @@ Eloquent 模型事件允许我们在模型的合个生命周期节点上进行�
     ]);
 
 - created  : 当调用模型的 create 方法创建一条记录 **之后**.
-
 
 - updating : 当调用模型的 update 方法更新一条数据 **之前**
 

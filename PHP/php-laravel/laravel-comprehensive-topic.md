@@ -425,5 +425,101 @@ User::find(1)->can('destroy', $blog);
 
 
 
-## CSRF 攻击
+# CSRF 攻击
+
+
+
+# N + 1 问题
+
+N + 1 问题普遍存在于ORM框架中，发生于当模型中存在关联关系的时，我们用 `post(推文)` 表和 `category（推文类别）` 表举例子。
+
+~~~
+/* table : category */
+id
+category_name
+
+
+/* table : post */
+id 
+category_id // Foreign key
+~~~
+
+当我们将 `Post Model` 和 `Category Model` 使用 `belongsTo` 关联后, 便可以使用 `Post Model` 属性的方式获得其对应的类别
+
+~~~php
+# 获得 $post 类别名
+$post->category->category_name
+~~~
+
+**N+1** 问题发上在从数据库中取出一定量的 posts 同时获取这些 posts 的类别名的时候。
+
+## 不关联的 Sql 查询
+
+~~~php
+/* 不获得推文分类信息 */
+
+/* 分页获取 $posts */
+$posts = Post::pagenate(30);
+~~~
+
+此时 `Query` 查询数量及其语句为以下两个 :
+
+~~~sql
+select count(*) as aggregate from `posts`
+select * from `posts` limit 30 offset 0
+~~~
+
+<img src='img/N1-without-rel.png'>
+
+## 关联的 Sql 查询
+
+~~~php
+/* 获得推文分类信息 */
+
+/* 分页获取 $posts */
+$posts = Post::pagenate(30);
+
+/* 获取推文类别并加入为推文的属性 */
+foreach($posts as &$post){
+	$post['cat'] = $post->category->category_name;
+}
+~~~
+
+此时的 `Query` 数量及其语句为 :
+
+<img src='img/n1-with-rel.png' />
+
+**可以看到 query 数量从 2 个飙升到 32 个**，对于每一个 post 都会查找一遍对应的类别表, 造成了极大的性能损耗.
+
+## `with` 预加载
+
+N + 1 的问题可以使用 `with` 预加载语句解决。
+
+~~~php
+# 预加载
+$posts = $this->postModel::with('category')->paginate(30);
+foreach ($posts as &$post){
+    $post['cat'] = $post->category->name;
+}
+~~~
+
+<img src='img/n1-sql-use-with.png' />
+
+可以看到使用 `with` 预加载可以提前获得所有 `post` 中出现 `category_id` 然后一并查询类别表并缓存下来。从而使得其查询数量将为 3 个。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

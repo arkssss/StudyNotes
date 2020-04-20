@@ -309,7 +309,7 @@ inputHandleChange(e){
 }
 ~~~
 
-# 中间件
+# 扩展
 
 ## 中间件定义
 
@@ -321,7 +321,7 @@ inputHandleChange(e){
 
 
 
-## Redux-thunk
+## `redux-thunk`
 
 > With a plain basic Redux store, you can only do simple synchronous updates by dispatching an action. Middleware extend the store's abilities, and let you write async logic that interacts with the store.
 >
@@ -437,6 +437,442 @@ componentDidMount(){
     
     store.dispatch(action)
 }
+~~~
+
+
+
+## `react-redux`  🌟
+
+`react-redux` 也是目前市面上主流的 `redux` 中间件，帮助 `react` 更好的使用 `redux`
+
+### 安装
+
+~~~shell
+# install
+$yarn add react-redux
+~~~
+
+
+
+### 简单使用
+
+~~~
+/* react-redux 需要以下文件 */
+- stroe
+	- index.js
+	- reducer.js
+	- actionType.js
+~~~
+
+~~~javascript
+/* index.js 定义来自 redux 用于定义数据仓库store */
+
+import {createStore, applyMiddleware, compose} from 'redux';
+import reducer from './reducer';
+
+/* 使用 redux & redux-develope-tools */
+const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__?
+window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({}) : compose
+
+const store = createStore(
+    reducer,
+    composeEnhancer()
+)
+
+export default store;
+~~~
+
+~~~javascript
+/* reducer.js */
+/* 定义也来自于 redux 接受来自 store dispatch 的请求并对 store 进行修改*/
+
+import { SEARCH_INPUT_FOCUSED, SEARCH_INPUT_BLUR } from './actionType'
+
+const defaultState = {
+    'focused' : false
+}
+
+const HeaderReducer = (state = defaultState, action) => {
+    if(action.type === SEARCH_INPUT_FOCUSED || action.type === SEARCH_INPUT_BLUR){
+        return {
+            'focused' : action.value
+        }
+    }
+    return state;
+} 
+
+export default HeaderReducer
+~~~
+
+~~~javascript
+/* actionType.js 抽离出action type */
+
+export const SEARCH_INPUT_FOCUSED = 'search_input_focused';
+export const SEARCH_INPUT_BLUR = 'search_input_blur';
+~~~
+
+**定义完提供给 `redux` 的三个文件， 便可以使用 `react-redux` 对其进行使用** 
+
+* `Provider` 定义 ； 
+
+  首先在整合项目的 **入口文件 index.js** 中引入 `react-redux`, 使用 `<Provide>` 标签对项目 `<App />` 进行包裹，表示其所有的 `<App />` 的元素都可以使用 `store` 中的值
+
+  ~~~javascript
+  import React from 'react';
+  import ReactDOM from 'react-dom';
+  import App from './App';
+  
+  /* redux react-redux */
+  import store from './store/index';
+  import { Provider } from 'react-redux';
+  
+  ReactDOM.render(
+    <React.StrictMode>
+      <Provider store = {store}>
+        <App />
+      </Provider> 
+    </React.StrictMode>,
+    document.getElementById('root')
+  );
+  
+  ~~~
+
+* `connect` 定义 ： 
+
+  `connect` 连接特定组件和 `store` 实现数据同步
+
+  ~~~javascript
+  /* react-redux */
+  import { connect } from 'react-redux'
+  
+  /* 无状态UI组件 */
+  const Header = (props) => {
+      
+      // ...
+  }
+  
+  /* connect Header component with store*/
+  export default connect(mapStateToProps, mapDispatchToProps)(Header);
+  ~~~
+
+* `mapStateToProps` 和 `mapDispatchToProps` 定义 :
+
+  `mapStateToProps` 定义了组件中的 `props` 和 `redux` 中的 `stroe` 的映射关系.
+
+  `mapDispatchToProps` 则定义了 `action` 更新逻辑
+
+  ~~~javascript
+  /* 无状态UI组件 */
+  const Header = (props) => {
+      
+      /* 绑定事件 */
+  	<Input
+      	onFucus = {props.handlerSearchInputFocused}
+      	onBlur = {pros.handlerSearchInputBlur}
+      />	
+      
+  }
+  
+  /* 定义该组件中的 focused 对应 store中的focused */
+  const mapStateToProps = (state) =>   {
+      return {
+          focused : state.focused
+      }
+  } 
+  
+  /* 绑定组件中的事件修改store */
+  const mapDispatchToProps = (dispatch) =>{
+      return {
+          handlerSearchInputFocused(){
+              const action = {
+                  type : SEARCH_INPUT_FOCUSED,
+                  value : true
+              }
+              dispatch(action)
+          },
+          handlerSearchInputBlur(){
+              const action = {
+                  type : SEARCH_INPUT_BLUR,
+                  value : false
+              }
+              dispatch(action)
+          }
+      }
+  }
+  
+  ~~~
+
+
+### 使用`combineReducers` 拆分 `reducer`
+
+随着项目的扩大，`reducer` 中的逻辑会越来越多, 此时可以通过 `combineReducer` 来拆分总 reducer ，比如我们进行页面`Header`编写的时候，可以给 Header 专门建立 `headerReducer` 然后使用 `combineReducer` 结合
+
+~~~
+- common
+  - header
+  	- store
+  		- headerReducer.js
+  		- actionType.js
+  	index.js
+- store
+  - reducer.js
+  - index.js
+~~~
+
+此时可以在 `/store/reducer.js` 中定义
+
+~~~javascript
+/* /store/reducer.js */
+import {combineReducers} from 'redux'
+import HeaderReducer from '../common/header/store'
+
+/* 合并各个 reducer */
+export default combineReducers({
+ 	
+    /* 该reducer key值为header */
+    header : HeaderReducer
+
+})
+~~~
+
+然后在 `/common/header/index.js` 组件中，对数据的引用需要改为
+
+~~~javascript
+// ...
+
+const mapStateToProps = (state) =>   {
+    return {
+        // state.focused 改为 state.header.focused
+        focused : state.header.focused
+    }
+} 
+~~~
+
+
+
+### 拆分 `actionCreator`
+
+~~~
+- common
+  - header
+  	- store
+  		- headerReducer.js
+  		- actionType.js
+  		- actionCreator.js	// 拆分 actionCreator
+  	index.js
+- store
+  - reducer.js
+  - index.js
+~~~
+
+~~~javascript
+/* 抽离 actionCreator */
+import { SEARCH_INPUT_FOCUSED, SEARCH_INPUT_BLUR } from './actionType'
+
+export const searchFocused = () => ({
+    'type' : SEARCH_INPUT_FOCUSED,
+    'value' : true
+});
+
+export const searchBlur = () => ({
+    'type' : SEARCH_INPUT_BLUR,
+    'value' : false
+});
+~~~
+
+则对应的 `dispatch` 可以写为：
+
+~~~javascript
+import { actionCreator } from './store';
+
+const Header = (props) => {
+	 //  ...
+}
+
+const mapDispatchToProps = (dispatch) =>{
+    return {
+        handlerSearchInputFocused(){
+            dispatch(actionCreator.searchFocused())
+        },
+        handlerSearchInputBlur(){
+            dispatch(actionCreator.searchBlur())
+        }
+    }
+}
+~~~
+
+
+
+### 提供统一出口文件
+
+~~~
+- common
+  - header
+  	- store
+  		- headerReducer.js
+  		- actionType.js
+  		- actionCreator.js
+  		- index.js	// 统一出口文件
+  	index.js
+- store
+  - reducer.js
+  - index.js
+~~~
+
+~~~javascript
+/* 该 folder 下的入口文件 */
+import headReducer from './headerReducer'
+import * as actionCreator from './actionCreator'
+import * as actionType from './actionType'
+
+export {headReducer, actionCreator, actionType}
+~~~
+
+~~~javascript
+/* 通过统一出口文件 便捷引入 */
+
+import { actionCreator } from './store';
+~~~
+
+
+
+
+
+## `Immutable`
+
+> [immutabel](<https://github.com/immutable-js/immutable-js>)
+
+`Immutable` 用于管理 `redux` 中的不可变变量 `state`
+
+### 安装
+
+~~~shell
+$yarn add immutable
+~~~
+
+### 相关 Api 
+
+* 定义一个 immutable 对象 : `fromJS()`
+
+  ~~~javascript
+  import {fromJS} from 'immutable'
+  
+  const defaultState = fromJS({
+      'focused' : false
+  })
+  ~~~
+
+* 修改 immutable 对象 : `set()`
+
+  ~~~javascript
+  defaultState.set('focused', action.value);
+  ~~~
+
+* 获取 immutable 对象 : `get()`
+
+  ~~~javascript
+  defaultState.get('focused')
+  ~~~
+
+
+
+### 使用例子
+
+~~~javascript
+/* store/reducer.js 定义 immutable 对象 */
+
+import { SEARCH_INPUT_FOCUSED, SEARCH_INPUT_BLUR } from './actionType'
+import {fromJS} from 'immutable'
+
+
+/* 对state进行 immutable 定义*/
+const defaultState = fromJS({
+    'focused' : false
+})
+
+const HeaderReducer = (state = defaultState, action) => {
+    if(action.type === SEARCH_INPUT_FOCUSED || action.type === SEARCH_INPUT_BLUR
+        
+        /* 
+        	对 immutable 对象state 进行重新赋值.
+        	set 并没有改变 immutable, 而是做了一个 copy 替换
+        */
+        return state.set('focused', action.value);
+    }
+    return state;
+} 
+
+export default HeaderReducer
+~~~
+
+~~~javascript
+/* index.js 使用 immutable 对象 */
+
+
+const mapStateToProps = (state) =>   {
+    return {
+        /* 使用 get 使用v*/
+        focused : state.header.get('focused')
+    }
+} 
+~~~
+
+
+
+## `redux-immutable`
+
+~~~javascript
+/* 引入 redux-immutable 的目的 */
+
+const mapStateToProps = (state) =>   {
+    return {
+        /* 
+        	这里我们的state.header是 immutable的 
+        	但是 state 理应也变为 immutable, 则可以通过 redux-immutable 实现
+        */
+        focused : state.header.get('focused')
+    }
+} 
+~~~
+
+
+
+### 安装
+
+~~~shell
+$yarn add redux-immutable
+~~~
+
+
+
+### 使用
+
+~~~javascript
+/* 总 reducer 文件 */
+
+/* old : import {combineReducers} from 'redux' */
+/* 只需要从redux-immutable中引入 combineReducer 即可 */
+import {combineReducers} from 'redux-immutable'
+import {headReducer} from '../common/header/store'
+
+
+/* 合并各个 reducer */
+export default combineReducers({
+ 
+    header : headReducer
+
+})
+~~~
+
+~~~javascript
+/* 调用 */
+const mapStateToProps = (state) =>   {
+    return {
+        
+        /* 此时 state 变成为了一个 immutable 对象 */
+        focused : state.get('header').get('focused')
+    }
+} 
 ~~~
 
 

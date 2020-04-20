@@ -126,11 +126,21 @@ $faker->time // "13:03:55"
 
 
 
-# diffForHumans 友好的时间显示
+# Carbon 时间处理工具
+
+~~~shell
+# install
+composer require nesbot/carbon
+
+# 现在的 Laravel 已经默认安装了 Carbon 工具，不需要单独引入了
+~~~
+
+## `diffForHumans` 友好的时间显示
 
 提供了更友好的时间显示 :
 
 ```shell
+# Tinker 
 >>> $time = $blg->user()->get()[0]->created_at;
 => Illuminate\Support\Carbon @1004987065 {#3071
      date: 2001-11-05 19:04:25.0 UTC (+00:00),
@@ -140,4 +150,47 @@ $faker->time // "13:03:55"
 => "18 years ago"
 ```
 
- 
+ ~~~php
+/* php script */
+use Carbon\Carbon;
+
+/* updated_at 修改器 */
+public function getUpdatedAtAttribute(){
+
+    return Carbon::parse($this->attributes['updated_at'])->diffForHumans();
+
+}
+ ~~~
+
+
+
+
+
+
+
+# Laravel-debugbar 调试工具
+
+~~~shell
+# install
+composer require "barryvdh/laravel-debugbar:~3.2" --dev
+~~~
+
+~~~php
+/* config/debuger.php 设置debug环境 */
+'enabled' => env('APP_DEBUG', false),
+~~~
+
+可以用于接口的 `Sql` 执行语句，效果如下 :
+
+<img src='img/sql-debugger-bar.png' />
+
+
+
+
+
+
+
+
+
+
+

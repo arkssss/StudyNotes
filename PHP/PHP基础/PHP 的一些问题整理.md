@@ -1,8 +1,69 @@
-## PHP 的一些问题整理
+# PHP语言基础
+
+## 数组
+
+### 遍历
+
+~~~php
+/* foreach 遍历 php 数组 */
+$arr = [];
+
+/* key + value 形式 */
+foreach($arr as $key => $value){
+    // code ...
+}
+
+/* value 形式 */
+foreach($arr as $value){
+    // code ...
+}
+~~~
 
 
 
-### 1. 如何子类函数调用基类方法, 在这个方法中显示子类的类名 ?
+### `in_array` 判断数组有无某元素
+
+> [in_array](<https://www.php.net/manual/en/function.in-array.php>)
+
+~~~php
+<?php
+    $os = array("Mac", "NT", "Irix", "Linux");
+    if (in_array("Irix", $os)) {
+        echo "Got Irix";
+    }
+    if (in_array("mac", $os)) {
+        echo "Got mac";
+    }
+?>
+~~~
+
+
+
+### `unset` 销毁数组中元素
+
+> [unset](<https://www.php.net/manual/zh/function.unset.php>)
+
+~~~php
+/* 可以使用 unset 销毁某数组元素 */
+$arr = ['title' => 'hello', 'age' : '18', ...];
+
+/* 销毁，同时销毁 title 及其对应的 value 值 */
+unset($arr['title']);
+~~~
+
+
+
+
+
+
+
+
+
+
+
+## 其他
+
+### 如何子类函数调用基类方法, 在这个方法中显示子类的类名 ?
 
 
 
