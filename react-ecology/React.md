@@ -568,7 +568,56 @@ componentDidMount(){
 
 
 
-# 项目拆分
+# 项目构建准则
+
+## 项目标准目录
+
+~~~
+/* 一个例子 for 标准的前端react项目目录结构 */
+├── common	/* 放整个项目的公共组件，如 header, footer */
+│   └── header
+│       ├── index.js
+│       ├── store /* header 的公共数据管理 */
+│       │   ├── actionCreator.js
+│       │   ├── actionType.js
+│       │   ├── headerReducer.js
+│       │   └── index.js
+│       └── style.js
+├── index.js
+├── pages 	/* 放项目不同页面的组件 */
+│   ├── detail	/* 文章 detail 页面 */
+│   │   └── index.js
+│   └── home	/* 项目首页 */
+│       ├── components	/* 项目首页的一些组件 */
+│       │   ├── list.js
+│       │   ├── recommend.js
+│       │   ├── topic.js
+│       │   └── writer.js
+│       ├── index.js
+│       ├── store     /* 项目首页的公共数据管理 */
+│       │   ├── actionCreator.js 
+│       │   ├── actionType.js
+│       │   ├── homeReducer.js
+│       │   └── index.js
+│       └── style.js
+├── static			 /* 项目静态数据 */
+│   ├── cs.jpeg
+│   ├── home.jpeg
+│   ├── iconfont
+│   │   ├── iconfont.js
+│   │   ├── iconfont.svg
+│   │   ├── iconfont.ttf
+│   │   ├── iconfont.woff
+│   │   └── iconfont.woff2
+│   └── logo.png
+├── store           /* 项目整个公共数据管理 */
+│   ├── index.js
+│   └── reducer.js
+└── style.js
+├── App.js
+~~~
+
+
 
 ## 组件逻辑和UI拆分
 
@@ -807,19 +856,118 @@ export const Wrapper = styled.div`
 
 
 
+## `react-router-dom`
+
+`react` 路由扩展, 可以实现组件的根据路由显示。
+
+
+
+### 安装
+
+~~~shell
+# 安装
+$yarn add react-router-dom
+~~~
+
+
+
+### 使用
+
+~~~javascript
+/* 入口 App Component 中 */
+import { Route, BrowserRouter } from 'react-router-dom';
+
+function App() {
+  return (
+    <div className='App'>
+      <Header />
+      <BrowserRouter>
+        <div>
+          <Route path = '/' exact render = {()=><div>home</div>}></Route>
+          <Route path = '/detail' exact render = {()=><div>detail</div>}></Route>
+        </div>
+      </BrowserRouter>
+    </div>
+  );
+}
+~~~
+
+* 当路由为 `/` (根域名) 的时候，显示。
+
+  ~~~javascript
+  <Route path = '/' exact render = {()=><div>home</div>}></Route>
+  ~~~
+
+* 当路由为 `/detail` , 显示。
+
+  ~~~javascript
+  <Route path = '/detail' exact render = {()=><div>detail</div>}></Route>
+  ~~~
+
+`exact` 表示路由的精准匹配。否则在 `/detail` 的时候，也会匹配到 `/` 从而输出两个组件的内容。
 
 
 
 
 
+### 更一般的
+
+~~~javascript
+/* 更一般的将组件引入 */
+import React from 'react';
+import Header from './common/header'
+import { Route, BrowserRouter } from 'react-router-dom';
+import Home from './pages/home';
+import Detail from './pages/detail';
+
+function App() {
+  return (
+    <div className="App">
+      <Header />
+      <BrowserRouter>
+        <div>
+      	  /* 组件引入 */
+          <Route path = '/' exact component = {Home}></Route>
+          <Route path = '/detail' exact component = {Detail}></Route>
+        </div>
+      </BrowserRouter>
+    </div>
+  );
+}
+export default App;
+~~~
+
+
+
+### 动态路由
+
+~~~javascript
+/* 带参路由的写法 */
+<Route path = '/detail/:id' exact component = {Detail}></Route>
+
+
+/* 对应的页面获取 id */
+this.props.match.params.id
+~~~
+
+
+
+### `Link` 标签跳转
+
+~~~java
+import {Link} from 'react-router-dom';
+
+/* 可以将包裹的DOM变为一个链接，跳转到/detail */
+<Link to={'/detail'}>
+	...
+</Link>
+~~~
 
 
 
 
 
-
-
-
+## `react-loadable`
 
 
 
