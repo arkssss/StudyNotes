@@ -122,8 +122,6 @@ $php artisan make:controller UsersController
 
 
 
-
-
 ## 控制器传递参
 
 ~~~php
@@ -413,7 +411,7 @@ return View('user.edit', compact('user'))
 
 # Model 层
 
-##Eloquent 
+##Eloquent ORM
 
 Laravel 的 model 层为 ORM 架构, 在框架中叫 : `Eloquent ORM`, 所谓的 ORM 即为 Object Relation Map. 表示数据库中的每一个表都对应一个 Model 对象
 
@@ -465,9 +463,11 @@ public function __get($key)
 }
 ~~~
 
-### `Fillable` 成员变量
+### `fillable` 成员变量
 
-在新增记录的时候, 需要注意在 `Model`内部指出, 哪些是可以被更新的. 即规定 fillable 变量. 否则会导致插入失败
+在 `created` 新增记录的时候, 需要注意在 `Model`内部指出, 哪些是可以被更新的. 即规定 `fillable` 变量. 否则会导致插入失败.
+
+通俗来说 `$fillable` 变量规定了从数组转化为`eloquent` 实例的字段，只有其定义的字段才能被转化为 `eloquent` 实例的属性。
 
 ```php
 class Blog extends Model
@@ -578,6 +578,56 @@ $user = User::where('name', 'fz')->first()
 $user = User::where('name', 'fz')->get();
    
 ~~~
+
+### `save`  新增 & 更新 数据
+
+~~~php
+/* 
+	save
+	1. 是根据 Eloquent 实例来进行 数据新增和更新操作的
+	2. 自动维护 created_at, updated_at 两个字段
+*/
+
+
+//	新增
+$post = new App\Models\Post();
+$post->title = 'hello'
+$post->save();
+
+// 更新
+$post = App\Models\Post::where('title','hello')->first()
+$post->title = 'hello world';
+$post->save()
+~~~
+
+
+
+### `create` 创建 & 批量创建
+
+~~~php
+/*
+	create
+	1. create 使用过 Eloquent 类的静态方法来执行更新操作
+	2. create 的传递参数为一个 array 而不是 Eloquent 实例
+	3. 自动维护 created_at, updated_at 两个字段
+*/
+
+/*
+	创建
+	注意使用create的时候，需要考虑Eloquent中定义的 fillable 变量的问题，
+	即传入的数组还会经过 fillable 的转化，如果 key 值不在 fillable 中定义的	话，数组中的改字段会被自动忽略。
+*/
+App\Models\Post::create(['title'=>'hello']);
+
+
+/*
+  批量创建
+  只需要在 create 方法中传入对应的数组即可。
+*/
+App\Models\Post::create([['title'=>'hello'], ['title'=>'hello world']]);
+~~~
+
+
 
 
 

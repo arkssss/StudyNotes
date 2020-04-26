@@ -531,42 +531,6 @@ deleteRow(id){
 
 
 
-## AJAX 操作
-
-`React` 并没有对 `AJAX` 操作进行封装，使用时需可以安装 `axios` 。
-
-~~~shell
-# 安装 axios
-cd your-app
-
-yarn add axios
-~~~
-
-一般的 `ajax` 操作会写在 `componentDidMount` 生命周期中
-
-~~~javascript
-import axios from 'axios'
-
-// ajax 操作
-componentDidMount(){
-    axios.get('/api/todoList') 
-        .then((res) => {
-        // 成功
-        console.log('success');
-
-        // 更新
-        this.setState(() => ({
-            'list' : res.data
-        }))
-
-    })
-        .catch(() => {
-        console.log('error')
-    })
-}
-~~~
-
-
 
 # 项目构建准则
 
@@ -680,6 +644,76 @@ export default componentUI
 
 
 # 扩展
+
+## `axios` AJAX 操作
+
+### 安装
+
+`React` 并没有对 `AJAX` 操作进行封装，使用时需可以安装 `axios` 。
+
+~~~shell
+# 安装 axios
+cd your-app
+
+yarn add axios
+~~~
+
+**一般的初始化 `ajax` 操作会写在 `componentDidMount` 生命周期中**
+
+
+
+### `get` 
+
+~~~javascript
+import axios from 'axios'
+
+// get ajax 操作
+componentDidMount(){
+    axios.get('/api/todoList') 
+        .then((res) => {
+        // 成功
+        console.log('success');
+
+        // 更新
+        this.setState(() => ({
+            'list' : res.data
+        }))
+
+    })
+        .catch(() => {
+        console.log('error')
+    })
+}
+~~~
+
+### `post`
+
+~~~javascript
+import axios from 'axios'
+
+/* post ajax */
+componentDidMount() {
+    axios.post('/api/todoList',{
+        'title' : 'hello world',
+        'body'  : 'hello code day',
+        'category_id' : 1
+    }).then((res)=>{
+
+        console.log(res.status);
+
+    }).catch((e)=>{
+
+        console.log(e)
+
+    })
+}
+~~~
+
+
+
+
+
+
 
 ## `styled-components`
 
@@ -927,6 +961,7 @@ function App() {
       <BrowserRouter>
         <div>
       	  /* 组件引入 */
+      	  /* 注意<Route></Route>中间不得有空格 */
           <Route path = '/' exact component = {Home}></Route>
           <Route path = '/detail' exact component = {Detail}></Route>
         </div>

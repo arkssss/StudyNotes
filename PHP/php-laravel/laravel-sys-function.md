@@ -71,10 +71,13 @@ APP_URL=http://larabbs.test
 
 ~~~php
 /* 获得当前时区信息 */
-config('app.timezone')
+
+/* 1. 利用全局函数config获取 */
+config('app.timezone');
+    
+/* 2. 利用外观类获取 */
+Illuminate\Support\Facades\Config::get('app.timezone');
 ~~~
-
-
 
 **一般在项目初始化的时候, 建议修改如下结果配置信息**
 
@@ -86,6 +89,21 @@ config('app.timezone')
 
 /* 默认语言设置为中文 */
 'locale' => 'zh-CN',
+~~~
+
+当然也可以自定义配置文件如 `constant.php`
+
+~~~php
+/* 如: config/constant.php */
+return [
+    'pi' => 3.14
+]
+~~~
+
+获取的方式和之前相同
+
+~~~php
+Config::get('constant.pi');
 ~~~
 
 

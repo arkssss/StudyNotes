@@ -750,7 +750,7 @@ import { actionCreator } from './store';
 $yarn add immutable
 ~~~
 
-### 相关 Api 
+### 相关 Api  `get` & `set`
 
 * 定义一个 immutable 对象 : `fromJS()`
 
@@ -816,6 +816,84 @@ const mapStateToProps = (state) =>   {
     }
 } 
 ~~~
+
+
+
+### 不同 `json` 变量的取值
+
+~~~javascript
+/* home */
+const defaultState = fromJS({
+	  
+      /* 普通变量 */
+      "view_count" : 10,
+      
+      /* list 变量 */
+      "topic" : ['core', 'Spring', 'PHP'],
+      
+      /* list_Map 变量 */
+      "listCategory" : [
+        {
+          "id": 1,
+          "name": "分享",
+        },
+        {
+          "id": 2,
+          "name": "公告",
+        },
+        {
+          "id": 3,
+          "name": "程序",
+        }
+      ]
+})
+~~~
+
+~~~javascript
+class A extends Component{
+    /* 对于普通变量 */
+    this.props.veiw_count
+    
+    /* 对于list变量*/
+    this.props.topic.map((item)=>{
+		{item}
+    })
+	
+	/* 对于 list_map 变量*/
+    this.props.listCategory.map((item)=>{
+		{item.get('id')}
+        {item.get('name')}
+    })
+}
+
+/* 映射关系如下 */
+const mapStateToProps = (state)=>{
+  return {
+    'view_count' : state.get('home').get('view_count'),
+    'topic' : state.get('home').get('topic'),
+    'listCategory' : state.get('home').get('listCategory'),
+  }
+};
+~~~
+
+
+
+### 同时修改多个属性 链式 `set`
+
+~~~javascript
+/* home */
+const state = fromJS({
+      "view_count" : 10,
+      "topic" : ['core', 'Spring', 'PHP'],
+})
+
+
+
+/* 同时修改多个属性 */
+state.set('view_count', 20).set('topic', ['JS', 'Java']);
+~~~
+
+
 
 
 

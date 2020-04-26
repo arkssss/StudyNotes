@@ -30,6 +30,8 @@ public function signin(Request $request){
 
 > [验证请求表单](<https://learnku.com/docs/laravel/6.x/validation/5144#form-request-validation>)
 >
+> [formRequest 解析](<https://learnku.com/laravel/t/42954>)
+>
 > 面对更复杂的验证情境中，你可以创建一个「表单请求」来处理更为复杂的逻辑。表单请求是包含验证逻辑的自定义请求类。可使用 Artisan 命令 `make:request` 来创建表单请求类
 
 ```shell
@@ -116,6 +118,34 @@ public function update(UserUpdateRequest $request){
     
 }
 ~~~
+
+#### 自定义返回结果
+
+> 如果验证失败，就会生成一个让用户返回到先前的位置的重定向响应。这些错误也会被闪存到 `session` 中，以便这些错误都可以在页面中显示出来。如果传入的请求是 AJAX，会向用户返回具有 422 状态代码和验证错误信息的 JSON 数据的 HTTP 响应。
+>
+
+如果在 api 请求下，想自定义返回状态码，以及返回数据可以重写自定义 request 中的 `failedValidation` 方法
+
+~~~php
+class PostStoreRequest extends FormRequest
+{
+    /**
+     * 重写自定义 验证不通过的返回 Json
+     * @param Validator $validator
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'errors' => $validator->errors(),
+        ], 200));
+    }
+    
+}
+~~~
+
+
+
+
 
 
 

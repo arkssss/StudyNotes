@@ -164,7 +164,7 @@ class testListener
 
 ```php
 // 判断当前用户是否已认证（是否已登录）
- Auth::check();
+ Auth::check();A
 // 获取当前的认证用户
  Auth::user();
 // 获取当前的认证用户的 ID（未登录情况下会报错）
@@ -406,12 +406,6 @@ class BlogController extend controller{
 
 
 
-
-
-
-
-
-
 ### 策略方法对非当前登陆用户的权限检测
 
 ```php
@@ -426,6 +420,184 @@ User::find(1)->can('destroy', $blog);
 
 
 # CSRF 攻击
+
+> [CSRF 保护](<https://learnku.com/docs/laravel/7.x/csrf/7460>)
+>
+> Laravel 可以轻松使地保护你的应用程序免受 [跨站请求伪造](https://en.wikipedia.org/wiki/Cross-site_request_forgery) (CSRF) 攻击。 跨站点请求伪造是一种恶意攻击，它凭借已通过身份验证的用户身份来运行未经过授权的命令。
+>
+> Laravel 会自动为每个活跃的用户的会话生成一个 CSRF「令牌」。该令牌用于验证经过身份验证的用户是否是向应用程序发出请求的用户。
+
+简而言之，一般的 web app 会在请求的时候在 `cookies` 和 `session` 中表示出此次请求的会话 id, 每次请求的时候客户端都会向服务端发送此会话id来标示此次会话。但是 `sessionID` 仅能标示出此次回话的存在，只靠 `sessionID` 并不能识别出此次的请求是不是真的出自于该客户端用户的操作，此就造成了 CSRF 攻击的风险。
+
+## 一般解决思路
+
+我们的 web 请求的时候，需要向服务端证实本次请求确实是来自于用户，具体的解决思路如下。在服务端返回给客户端页面的时候，生成一个完全随机的 `CSRF_TOKEN` ，同时存储于服务端和客户端。在客户端对服务端进行请求的时候，将此 `CSRF_TOKEN` 发送于服务端，服务端对此 `TOKEN` 进行验证。**如果对比一致，那么请求执行，同时 服务端和客户端刷新 `CSRF_TOKEN`**, 用于下一次请求。
+
+一般 CSRF 攻击目的在于代替被攻击用户身份修改信息，**所以：各种 ’写请求‘ 都需要加上一个 `CSRF_TOKEN` 保证安全性**，而 ''读请求' '就可以不进行 `CSRF_TOKEN` 验证:
+
+~~~php
+/**
+* Laravel 中验证逻辑，如果是 head, get, option 这三个 '读请求' 便可以跳过认证
+* Determine if the HTTP request uses a ‘read’ verb.
+*
+* @param  \Illuminate\Http\Request  $request
+* @return bool
+*/
+protected function isReading($request)
+{
+    return in_array($request->method(), ['HEAD', 'GET', 'OPTIONS']);
+}
+~~~
+
+CSRF_TOKEN 存在于客户端的形式可以有多种
+
+* Cookies 中存储
+* Meta 标签中
+
+实际上 `Laravel` 会同时在 `cookies` 和 `meta` 标签中存储当前会话的 `CSRS_TOKEN`
+
+## Cookies 的 `CSRF_TOKEN` 存储
+
+Laravel 里 cookies 的 CSRF_TOKEN 存储规定于 `\App\Http\Middleware\VerifyCsrfToken` 这个中间件中:
+
+~~~php
+<?php
+
+namespace App\Http\Middleware;
+
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
+
+class VerifyCsrfToken extends Middleware
+{
+    /**
+     * addHttpCookies为true则会在请求返回的时候对客户端设置 CSRF_TOKEN 的 cookies
+     * Indicates whether the XSRF-TOKEN cookie should be set on the response.
+     *
+     * @var bool
+     */
+    protected $addHttpCookie = true;
+
+    /**
+     * The URIs that should be excluded from CSRF verification.
+     *
+     * @var array
+     */
+    protected $except = [
+        //
+    ];
+}
+
+~~~
+
+如果设置了 cookies 中的 token, 那么在每一次请求的时候，都会在 request header 中附加上该信息, 但是 cookies 也有被客户端禁用的情况。
+
+注意，`laravel` 中 cookies 设置的 csrf_token 并不是存在于服务端的原始值，而是经过一次加密的 csrf_token, 需要在传回服务端时进行解密比较。**且由于 random byte 的存在，相同的 csrf_token 会带来不同的密文**, 具体的加密解密操作可见 `VerifyCsrfToken` 中注入的 `Encrypter` 类 
+
+~~~php
+/* DI in VerifyCsrfToken */
+public function __construct(Application $app, Encrypter $encrypter)
+{
+    $this->app = $app;
+    $this->encrypter = $encrypter;
+}
+~~~
+
+
+
+## Meta 标签的 `CSRF_TOKEN` 存储
+
+为了应对 cookies 禁用以及其他 cookies 使用不成功的时候，我们还可以在 `<meta>` 标签中设置此次会话的 `CSRF_TOKEN`
+
+~~~html
+<!-- CSRF Token -->
+<meta name="csrf-token" content="{{ csrf_token() }}">
+~~~
+
+
+
+## Laravel 获取 request中的 `CSRF_TOKEN`
+
+Laravel 会从 **三个渠道获得 `CSRF_TOKEN`** 
+
+* `post` 请求的 `input` 输出栏 (一般为隐藏栏)
+* `request header` 中的 `X-CSRF-TOKEN` 字段
+* 如果以上两种都不存在，则在 `cookies` 中寻找，且进行解密操作还原为服务端的原始值
+
+~~~php
+/**
+* Get the CSRF token from the request.
+*
+* @param  \Illuminate\Http\Request  $request
+* @return string
+*/
+protected function getTokenFromRequest($request)
+{
+    $token = $request->input('_token') ?: $request->header('X-CSRF-TOKEN');
+
+    if (! $token && $header = $request->header('X-XSRF-TOKEN')) {
+        $token = $this->encrypter->decrypt($header, static::serialized());
+    }
+
+    return $token;
+}
+~~~
+
+
+
+## 服务端比较`CSRF_TOKEN`
+
+可以看到，在服务端，csrf_token 存于 `$request->session()->token()` 中。
+
+`laravel` 中使用 `hash_equals` 进行两者的比较，可以使得无论两者值是什么，比较的时间都是一样从而有效的防止了 **侧信道攻击**。
+
+~~~php
+/**
+* Determine if the session and input CSRF tokens match.
+*
+* @param  \Illuminate\Http\Request  $request
+* @return bool
+*/
+protected function tokensMatch($request)
+{
+    $token = $this->getTokenFromRequest($request);
+
+    return is_string($request->session()->token()) &&
+        is_string($token) &&
+        hash_equals($request->session()->token(), $token);
+}
+~~~
+
+
+
+## 如何传递 CSRC_TOKEN
+
+* **Method 1:** 现阶段，对于每一次 `post` 请求最好从 `meta` 标签中获取一个 csrf_token 作为其隐藏表单域名，`name` 设置为 `_token`。从而保证 `laravel` 在获得 csrf_token 的时候拥有最高的效率（因为其默认先获取 input 域中的 _token）
+
+    ~~~javascript
+    /* example for post request */
+    axios.post('/login', {
+        '_token' : $('meta[name="csrf-token"]').attr('content'),
+        'email' : values.email,
+        'password' : values.password,
+        'remember' : values.remember,
+    }).then((res)=>{
+        console.log(res);
+    }).catch(()=>{
+        console.log('error');
+    });
+    ~~~
+
+* **Method 2:** 也可以在每一次请求的时候，给请求头赋值 `X-CSRF_TOKEN`
+
+    ~~~javascript
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    ~~~
+
+* **Method 3:** 当然在有 cookies 的 ` XSRF-TOKEN` 字段情况下，可以什么都不用管直接发送请求，但这种方式较前两种最慢。
 
 
 
@@ -506,6 +678,118 @@ foreach ($posts as &$post){
 <img src='img/n1-sql-use-with.png' />
 
 可以看到使用 `with` 预加载可以提前获得所有 `post` 中出现 `category_id` 然后一并查询类别表并缓存下来。从而使得其查询数量将为 3 个。
+
+
+
+# 自定义Repository层及其DI
+
+众所周知，一个良好的web后端架构应该大致分为 `controller`, `service`, `repository` 三层，分别处理不同的逻辑实行层间解耦。
+
+`Laravel` 类似 `Spring` 也是一个带有 IOC 和 ID 的框架那么如何在原生的 `laravel` 框架中实现 `Repository ` 的定义以及 DI呢。
+
+## 未定义接口
+
+~~~php
+/* 在未定义接口的情况下，可以直接定义DI */
+class UserRepo{
+    
+    
+}
+
+
+class UserService{
+	private $userRepo;
+    
+    /* 直接 DI */
+    public function __construct(UserRepo $userRepo){
+        $this->$userRepo = $userRepo;
+    }
+}
+~~~
+
+
+
+
+
+## 定义接口
+
+此时需要告诉 `Laravel` 接口和哪个实现类绑定
+
+~~~php
+interface IUserRepo{
+    public function getAllUser();
+}
+
+
+class UserRepoImpl implement IUserRepo{
+    public function getAllUser(){
+        ...
+    }
+}
+~~~
+
+
+
+### 创建 `provider`
+
+~~~shell
+$php artisan make:provider repositoryProvider
+~~~
+
+### 绑定 `interface` 和 `implement`
+
+~~~php
+<?php
+
+namespace App\Providers;
+use App\Repo\IUserRepo;
+use App\Repo\MysqlImpl\UserRepoImpl;
+
+class RepositoryProvider extends ServiceProvider
+{
+    /**
+     * Register services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        // bind repo
+        $this->app->bind(IUserRepo::class, UserRepoImpl::class);
+    }
+
+    /**
+     * Bootstrap services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        //
+    }
+}
+
+~~~
+
+### 依赖注入
+
+~~~php
+use App\Repo\IUserRepo;
+
+/* 在绑定后，便可以进行 DI */
+class UserService{
+	private $userRepo;
+    
+    /* DI */
+    public function __construct(IUserRepo $userRepo){
+        $this->$userRepo = $userRepo;
+    }
+}
+~~~
+
+
+
+
 
 
 
