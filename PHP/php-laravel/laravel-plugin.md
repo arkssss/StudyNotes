@@ -186,6 +186,130 @@ composer require "barryvdh/laravel-debugbar:~3.2" --dev
 
 
 
+# Guzzle
+
+> [Guzzle](https://github.com/guzzle/guzzle) 库是一套强大的 PHP HTTP 请求套件
+
+## 安装
+
+~~~shell
+$ composer require "guzzlehttp/guzzle:~6.3"
+~~~
+
+
+
+## 使用
+
+~~~php
+use GuzzleHttp\Client;
+
+
+$httpClient = new Client();
+
+/* 
+	发送请求
+	返回值即为请求的结果
+*/
+$response = $httpClient->get($requestUrl);
+
+
+/*
+	返回如果为 Json 
+	那么可以直接 json_deconde 进行解码即可
+*/
+$result = json_decode($response->getBody(), true);
+~~~
+
+
+
+# PinYin
+
+> [PinYin](https://github.com/overtrue/pinyin) 是 [安正超](https://learnku.com/users/76) 开发的，基于 [CC-CEDICT](http://cc-cedict.org/wiki/) 词典的中文转拼音工具，是一套优质的汉字转拼音解决方案
+
+## 安装
+
+~~~shell
+$ composer require "overtrue/pinyin:~4.0"
+~~~
+
+## 使用
+
+~~~php
+$pinYin = new Pinyin();
+
+$res = $pinYin->permalink($text);
+~~~
+
+
+
+# 消息队列 Redis - based
+
+众所周知，消息队列是一个很重要的后端技能，可以很轻松的实现模块解耦，消峰等功能。在 laravel 可是使用 Redis 作为消息队列驱动
+
+## 安装
+
+~~~shell
+# 安装 redis 在 php 中的客户端
+$ composer require "predis/predis:~1.1"
+~~~
+
+
+
+## 修改配置文件
+
+~~~.env
+.
+# 指定队列驱动为 redis
+QUEUE_CONNECTION=redis
+
+# 指定redis 客户端为 predis
+REDIS_CLIENT=predis
+.
+~~~
+
+# 队列监控 Horizon
+
+> [Horizon](https://learnku.com/docs/laravel/6.x/horizon) 是 Laravel 生态圈里的一员，为 Laravel Redis 队列提供了一个漂亮的仪表板，允许我们很方便地查看和管理 Redis 队列任务执行的情况。
+
+## 安装
+
+ ~~~shell
+$ composer require "laravel/horizon:~3.1"
+ ~~~
+
+## 发布
+
+~~~shell
+$ php artisan vendor:publish --provider="Laravel\Horizon\HorizonServiceProvider"
+~~~
+
+## 访问
+
+~~~
+ larabbs.test/horizon
+~~~
+
+
+
+## 开启监听状态
+
+~~~shell
+# 开启 horizon 的监听状态后，便可以不使用 php artisan queue:listen 命令了
+$ php artisan horizon
+~~~
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

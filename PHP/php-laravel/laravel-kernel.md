@@ -6,6 +6,79 @@
 
 和 `Spring` 类似, `Laravel` 引入了 `IOC` 和 `DI` 的概念
 
+## DI 依赖注入(带参数)
+
+我们无法避免一些场景的类实例化的时候，需要提供一些初始化参数，而这些参数存在于我们的配置文件中，比如我们的自定义 百度翻译类  `SlugTranslateHandler`
+
+~~~php
+<?php
+
+namespace App\Handlers;
+
+class SlugTranslateHandler{
+
+    private $appId;
+    private $appKey;
+
+    /* DI */
+    /* 构造函数需要提供 Api 的 appid 和 appkey */
+    public function __construct($appId, $appKey)
+    {
+        $this->appId = $appId;
+        $this->appKey = $appKey;
+    }
+    public function translate(){
+		//...
+    }
+}
+~~~
+
+~~~php
+/* 对这个翻译类进行DI */
+public function store(SlugTranslateHandler $slugTranslateHandler){
+
+    $slugTranslateHandler->translate();
+
+}
+~~~
+
+可以看到在对翻译类 DI 的时候并没有机会去传入这个定义的 `$appId` 和 `appKey` 。
+
+因此，此时我们可以用到 [容器的绑定基本值实现的](<https://learnku.com/docs/laravel/6.x/container/5131#binding-basics>)
+
+要对这个注入的 `$appId` 和 `$appKey` 进行初始赋值 ，我们可以在 `App\Provider\AppServiceProvider.php` 进行定义即可。
+
+~~~php
+<?php
+
+namespace App\Providers;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register()
+    {
+
+        /* baidu translate service */
+        $this->app->when('App\Handlers\SlugTranslateHandler')
+            ->needs('$appId')
+            ->give(Config::get('services.BaiDu_translate.appId'));
+
+        $this->app->when('App\Handlers\SlugTranslateHandler')
+            ->needs('$appKey')
+            ->give(Config::get('services.BaiDu_translate.appKey'));
+    }
+
+    public function boot()
+    {
+    }
+}
+
+~~~
+
+
+
 
 
 

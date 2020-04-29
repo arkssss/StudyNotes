@@ -4,7 +4,7 @@
 
 
 
-# 事件系统
+# 一. 事件系统
 
 [手册中的事件系统](<https://learnku.com/docs/laravel/6.x/events/5162>)
 
@@ -148,7 +148,7 @@ class testListener
 
 
 
-# 安全相关
+# 二. 安全相关
 
 ## 用户认证
 
@@ -419,7 +419,7 @@ User::find(1)->can('destroy', $blog);
 
 
 
-# CSRF 攻击
+# 三. CSRF 攻击
 
 > [CSRF 保护](<https://learnku.com/docs/laravel/7.x/csrf/7460>)
 >
@@ -523,6 +523,8 @@ Laravel 会从 **三个渠道获得 `CSRF_TOKEN`**
 * `request header` 中的 `X-CSRF-TOKEN` 字段
 * 如果以上两种都不存在，则在 `cookies` 中寻找，且进行解密操作还原为服务端的原始值
 
+以下源码可以看出 laravel 对请求中的 csrf_token 的获取顺序:
+
 ~~~php
 /**
 * Get the CSRF token from the request.
@@ -601,7 +603,7 @@ protected function tokensMatch($request)
 
 
 
-# N + 1 问题
+# 四. N + 1 问题
 
 N + 1 问题普遍存在于ORM框架中，发生于当模型中存在关联关系的时，我们用 `post(推文)` 表和 `category（推文类别）` 表举例子。
 
@@ -681,7 +683,7 @@ foreach ($posts as &$post){
 
 
 
-# 自定义Repository层及其DI
+# 五. 自定义Repository层及其DI
 
 众所周知，一个良好的web后端架构应该大致分为 `controller`, `service`, `repository` 三层，分别处理不同的逻辑实行层间解耦。
 
@@ -706,8 +708,6 @@ class UserService{
     }
 }
 ~~~
-
-
 
 
 
@@ -786,6 +786,106 @@ class UserService{
     }
 }
 ~~~
+
+
+
+# 六. 消息队列
+
+> [消息队列](<https://learnku.com/docs/laravel/7.x/queues/7491#connections-vs-queues>)
+>
+> [Laravel 实战实例](<https://learnku.com/courses/laravel-intermediate-training/6.x/using-queues/5576>)
+>
+> Laravel 队列为各种不同的队列后端 (如 Beanstalk、Amazon SQS、Redis 甚至关系数据库) 提供了的统一 API。通过队列，你可以将耗时任务 (如发送电子邮件) 的处理往后推延。延迟这些耗时的任务可以极大地提升 web 请求响应速度。
+
+## 使用例子
+
+### 定义任务
+
+~~~shell
+# 定义一个任务类，用于消费队列中的消息
+$php artisan make:job TranslateSlug
+~~~
+
+任务类被放置于 `app\jobs\` 目录下
+
+~~~php
+/*
+	以我们的翻译任务为例
+*/
+<?php
+
+namespace App\Jobs;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+
+use App\Models\Topic;
+use App\Handlers\SlugTranslateHandler;
+
+class TranslateSlug implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    protected $topic;
+
+    public function __construct(Topic $topic)
+    {
+        // 队列任务构造器中接收了 Eloquent 模型，将会只序列化模型的 ID
+        $this->topic = $topic;
+    }
+
+    public function handle()
+    {
+        // 请求百度 API 接口进行翻译
+        $slug = app(SlugTranslateHandler::class)->translate($this->topic->title);
+
+        // 为了避免模型监控器死循环调用，我们使用 DB 类直接对数据库进行操作
+        \DB::table('topics')->where('id', $this->topic->id)->update(['slug' => $slug]);
+    }
+}
+~~~
+
+### 任务分发
+
+~~~php
+/* 
+	分发的函数我们仅需调用 dispatch() 即可
+*/
+
+dispatch(new TranslateSlug($topic))
+~~~
+
+### 打开监听
+
+~~~shell
+# 让队列进入监听状态
+$ php artisan queue:listen
+~~~
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

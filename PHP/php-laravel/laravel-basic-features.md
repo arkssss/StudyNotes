@@ -2,9 +2,9 @@
 
 # laravel - 基础功能
 
-## 表单验证
+# 一. 表单验证
 
-### 快速验证
+## 快速验证
 
 > [表单验证](https://learnku.com/docs/laravel/6.x/validation/5144)
 
@@ -26,7 +26,7 @@ public function signin(Request $request){
 
 
 
-### 验证表单请求
+## 验证表单请求
 
 > [验证请求表单](<https://learnku.com/docs/laravel/6.x/validation/5144#form-request-validation>)
 >
@@ -119,7 +119,7 @@ public function update(UserUpdateRequest $request){
 }
 ~~~
 
-#### 自定义返回结果
+### 自定义返回结果
 
 > 如果验证失败，就会生成一个让用户返回到先前的位置的重定向响应。这些错误也会被闪存到 `session` 中，以便这些错误都可以在页面中显示出来。如果传入的请求是 AJAX，会向用户返回具有 422 状态代码和验证错误信息的 JSON 数据的 HTTP 响应。
 >
@@ -145,25 +145,7 @@ class PostStoreRequest extends FormRequest
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## 中间件
+# 二. 中间件
 
 > [手册中的中间件](https://learnku.com/docs/laravel/5.6/middleware/1364)
 
@@ -210,9 +192,7 @@ protected $routeMiddleware = [
 
 
 
-
-
-### 自定义中间件
+## 自定义中间件
 
 我们以一个自定义的中间件为例子
 
@@ -243,9 +223,7 @@ protected $routeMiddleware = [
 
 
 
-
-
-### Auth 中间件自动验证是否登陆
+## Auth 中间件自动验证是否登陆
 
 `Auth` 类的中间件同样为我们提供非常方面的验证是否登陆机制, 我们使用的时候, 只需要:
 
@@ -332,9 +310,7 @@ class Authenticate
 }
 ```
 
-
-
-### Guest 中间件自动验证只对游客开发的操作
+## Guest 中间件自动验证只对游客开发的操作
 
 有些操作只会对游客开发, 比如登陆功能. 和 auth 类似, guest 也是 laravel提供的一个中间件, 对于游客才授权, 用法如下:
 
@@ -364,25 +340,15 @@ class SessionsController extends Controller
 
 
 
-### verified 中间件验证用户邮箱是否被验证
+## verified 中间件验证用户邮箱是否被验证
 
 ~~~php
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 ~~~
 
+## signed 中间件实现验证签名
 
-
-
-
-### signed 中间件实现验证签名
-
-
-
-
-
-
-
-### throttle 中间件限制请求次数
+## throttle 中间件限制请求次数
 
 ~~~php
 /* 
@@ -398,17 +364,7 @@ $this->middleware("throttle:6,1")->only("register");
 
 
 
-
-
-
-
-
-
-
-
-
-
-## 记录日志
+# 三. 记录日志
 
 > [手册中日志功能](https://learnku.com/docs/laravel/5.6/logging/1374)
 
@@ -442,9 +398,7 @@ Log::channel('slack')->info('Something happened!');
 Log::stack(['single', 'slack'])->info('Something happened!');
 ```
 
-
-
-## 手动发送用户验证邮件
+# 四. 手动发送用户验证邮件
 
 实现邮件的发送, 我们首先需要配置 `.env` 文件
 
@@ -503,9 +457,7 @@ $message->to($to)->subject($subject);
 </html>
 ```
 
-
-
-## 自动发送用户验证邮件
+# 五. 自动发送用户验证邮件
 
 `Larval` 为我们提供了很方便的邮件发送功能. 主要是用来, 做用户邮件认证, 主要的逻辑是, 在用户注册之后, 便给用户发送一封邮件, 由用户点开后从而认证成功. 用户便可以正常使用. 否侧属于未认证账号.
 
@@ -541,7 +493,7 @@ class User extends Authenticatable implements MustVerifyEmailContracts
 	- 新版本中, MustVerifyEmailTrait 已经被默认移植到 Authenticatable 基类中. 可以不用自己使用了
 ```
 
-### 实现原理
+## 实现原理
 
 * 首先 `User` 类实现了 `MustVerifyEmailContracts` 这个接口, 这个接口包括 4 个方法 :
 
@@ -635,10 +587,7 @@ class User extends Authenticatable implements MustVerifyEmailContracts
 
 
 
-
-
-
-## 密码重置
+# 六. 密码重置
 
 `Laravel` 自动提供了关于密码重置的控制器和数据表
 
@@ -694,7 +643,7 @@ class User extends Authenticatable implements MustVerifyEmailContracts
 
 
 
-## 分页
+# 七. 分页
 
 数据分页是一个很常用的功能 `Laravel` 中的分页功能实现如下:
 
@@ -717,9 +666,7 @@ return view('users.index', compact('users'));
 
 对应的访问 url 为 : `/users?page=2`
 
-
-
-## 注册登陆脚手架(自动生成代码)
+# 八. 注册登陆脚手架(自动生成代码)
 
 `Laravel` 为我们自动集成了用户的 `登陆, 注册, 密码修改, 邮件激活等功能`. 且自动添加了视图等.
 
@@ -773,9 +720,7 @@ Route::post('email/resend', 'Auth\VerificationController@resend')->name('verific
 
 ```
 
-
-
-## 路由签名
+# 九. 路由签名
 
 > [路由签名](<https://learnku.com/laravel/t/9404/laravel-56-new-function-routing-signature>)
 >
@@ -825,11 +770,7 @@ Route::post('email/resend', 'Auth\VerificationController@resend')->name('verific
    Route::get('event/{id}/rsvp/{user}/{response}')->name("event.rsvp")->middleware('signed');
    ~~~
 
-
-
-## 上传图片
-
-
+# 十一. 上传图片
 
 前端部分需要在 form标签 属性中加入，否则上传的仅为图片名称
 
@@ -896,13 +837,92 @@ public fcuntion myFunc(ImageUploadHandler $imageUploadHandler){
 
 
 
+# 十二. 缓存系统
+
+> [缓存系统](<https://learnku.com/docs/laravel/7.x/cache/7482#driver-prerequisites>)
+>
+> Laravel 为各种后端缓存提供了丰富而统一的 API，其配置信息位于 `config/cache.php` 文件中。在该文件中你可以指定应用默认使用哪个缓存驱动。Laravel 支持当前流行的后端缓存，例如 [Memcached](https://memcached.org/) 和 [Redis](https://redis.io/) 。
+
+缓存系统的配置文件位于 `cache.php` 中。
+
+## Redis 驱动配置
+
+首先需要安装 redis 在 php 中提供的客户端如 `predis`.
+
+~~~.env
+# .env 配置文件中指定
+
+# 缓存系统的 driver
+CACHE_DRIVER=redis
+REDIS_CLIENT=predis
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+~~~
+
+对于 redis 的配置文件写在 `database.php` 中
+
+~~~php
+'redis' => [
+
+    'client' => env('REDIS_CLIENT', 'phpredis'),
+
+    'options' => [
+        'cluster' => env('REDIS_CLUSTER', 'redis'),
+        'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+    ],
+	
+    
+    /* 一般用途的 redis 使用如下配置，如 redis 驱动的队列 */
+    /* 默认使用 redis 的数据库0 */
+    'default' => [
+        'url' => env('REDIS_URL'),
+        'host' => env('REDIS_HOST', '127.0.0.1'),
+        'password' => env('REDIS_PASSWORD', null),
+        'port' => env('REDIS_PORT', '6379'),
+        'database' => env('REDIS_DB', '0'),
+    ],
+	
+    /* 缓存系统 的 redis 使用如下配置 */
+    /* 默认使用 redis 的数据库1 */
+    'cache' => [
+        'url' => env('REDIS_URL'),
+        'host' => env('REDIS_HOST', '127.0.0.1'),
+        'password' => env('REDIS_PASSWORD', null),
+        'port' => env('REDIS_PORT', '6379'),
+        'database' => env('REDIS_CACHE_DB', '1'),
+    ],
+
+],
+~~~
 
 
 
+## 缓存的使用
+
+> `Illuminate\Contracts\Cache\Factory` 和 `Illuminate\Contracts\Cache\Repository` [契约](https://learnku.com/docs/laravel/7.x/contracts) 提供了 Laravel 缓存服务的访问机制。 `Factory` 契约为你的应用程序定义了访问所有缓存驱动的机制。 `Repository` 契约通常是由你的 `cache` 配置文件指定的默认缓存驱动实现的。
 
 
 
+### 存值 `put`
 
+~~~php
+use Illuminate\Support\Facades\Cache;
+
+/* 600 为过期时间，即为10分钟 */
+Cache::put('name', 'Joel', 600);
+~~~
+
+
+
+### 取值 `get`
+
+~~~php
+use Illuminate\Support\Facades\Cache;
+
+/* 取 key 为name的值 */
+Cache::get('name');
+~~~
 
 
 

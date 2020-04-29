@@ -974,9 +974,9 @@ export default App;
 
 
 
-### 动态路由
+### 动态路由 - 必选参数
 
-~~~javascript
+~~~jsx
 /* 带参路由的写法 */
 <Route path = '/detail/:id' exact component = {Detail}></Route>
 
@@ -987,7 +987,18 @@ this.props.match.params.id
 
 
 
-### `Link` 标签跳转
+### 动态路由 - 可选参数
+
+~~~jsx
+/* 参数后面带问号表示可选参数 */
+<Route path = '/detail/:id/:slug?' exact component = {Detail}></Route>
+~~~
+
+
+
+
+
+### 标签跳转`Link` 
 
 ~~~java
 import {Link} from 'react-router-dom';
@@ -1000,15 +1011,69 @@ import {Link} from 'react-router-dom';
 
 
 
+### 路由重定向
+
+* `JS` 中实现:
+
+  场景：比如在登陆成功后重定向到首页。
+
+  在JS中可是使用 `this.props.history.push('/');`实现，其中 this 指向 `component`
+
+  ~~~javascript
+    import React, {Component} from "react";
+    import {connect} from "react-redux";
+  
+    class Login extends Component{
+  
+        render(){
+            /* 注意要bind this */
+            const HandlerLogin = this.props.HandlerLogin.bind(this)
+            return (
+            <Button
+              onClick={() => HandlerLogin()}
+            >提交
+            )    
+        }
+    }
+  
+    const mapDispatchToProps = (dispatch)=>{
+         HandlerLogin(){
+          // code ....
+  
+          // 重定向
+          this.props.history.push('/');
+        }   
+    }
+  ~~~
+
+* `<Redirect>` 标签实现:
+
+  场景：比如对于某一个 component, 需要登陆之后才能进行操作
+
+  ~~~javascript
+  import { Redirect } from 'react-router-dom';
+  
+  class Write extends Component{
+      render(){
+          const {logged} = this.props
+          if(logged){
+              /* 如果登陆则展示写页面 */
+              return(
+                  // write pages
+              )
+          }else{
+              /* 否则重定向到 login */
+              return (
+                  <Redirect to='/login' />
+              )
+          }
+      }
+  }
+  ~~~
+
 
 
 ## `react-loadable`
-
-
-
-
-
-
 
 
 
