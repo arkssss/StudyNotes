@@ -867,9 +867,153 @@ $ php artisan queue:listen
 
 
 
+# 七.  Artisan 命令行
+
+> [Artisan 命令行](<https://learnku.com/docs/laravel/6.x/artisan/5158>)
+>
+> Artisan 是 Laravel 自带的命令行接口，他提供了许多使用的命令来帮助你构建 Laravel 应用 。要查看所有可用的 Artisan 命令的列表，可以使用 `list` 命令：
+
+~~~shell
+$php artisan list
+~~~
+
+## 自定义命令
+
+~~~shell
+$php artisan make:command commandClassName --command=commandName
+
+# 如 定义命令在类 app\consloe\commands\CalculateActiveUser 类中
+# 使用命令 : php artisan larabbs:calculate-active-user
+$php artisan make:command CalculateActiveUser --command=larabbs:calculate-active-user
+~~~
+
+自定义命令内容.
+
+~~~php
+<?php
+
+namespace App\Console\Commands;
+
+use App\Schedule\ActiveUser;
+use Illuminate\Console\Command;
+
+class calActiveUser extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'larabbs:cal-active-user';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = '获取且生成活跃用户';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle(ActiveUser $activeUser)
+    {
+        //
+        $this->info("start computing");
+        
+        $activeUser->getActiveUser();
+        
+        $this->info("generate success");
+
+    }
+}
+~~~
 
 
 
+## 计划命令
+
+计划命令可以让系统按一定的时间间隔来执行某一命令
+
+>[计划任务](<https://learnku.com/courses/laravel-intermediate-training/6.x/active-users/5595#replies>)
+>
+>在过去，开发者必须为每个需要调度的任务生成单独的 Cron 项目。然而令人头疼的是任务调度不受版本控制，并且需要 SSH 到服务器上来增加 Cron 条目。
+>
+>Laravel 命令调度器允许你在 Laravel 中对命令调度进行清晰流畅的定义，并且仅需要在服务器上增加一条 Cron 项目即可。调度在 `app/Console/Kernel.php` 文件的 `schedule` 方法中定义。在该方法内包含了一个简单的例子，你可以随意增加调度到 Schedule 对象中。
+
+### 更新 corn 配置
+
+~~~shell
+$ export EDITOR=vi && crontab -e
+~~~
+
+将如下写到文件中:
+
+~~~
+* * * * * php /home/vagrant/Code/larabbs/artisan schedule:run >> /dev/null 2>&1
+~~~
+
+* `>>` 表示追加内容。
+
+  `>` 表示覆盖内容。
+
+  `/dev/null` 的意思是空设备。
+
+  `1` 表示 `stdout` 标准输出，系统默认就是它，所以 `>> file.txt` 和 `1>>file.txt` 相等。
+
+  `2` 表示 `stderr` 标准错误
+
+  `2>&1` 表示将所有错误覆盖到标准输出。
+
+  `* * * * * php /home/vagrant/Code/larabbs/artisan schedule:run >> /dev/null 2>&1` 的意思就是执行 `schedule:run` 命令，然后将它所有的输出包括错误输出导向空设备，也就是什么都不输出。
+
+* `*` 是 Linux crontab 任务中用来表示时间的字段，从左至右分别为分钟、小时、日、月、星期，分别有着各自的取值范围； `*` 表示任何时间，如果某个字段使用了 `*` ，则在满足其它字段制约的条件时，该字段的每个单位时间内都会执行一次该条任务；由于计划任务的执行频率是由框架控制的，所以此处所有的时间字段都被设置为了 `*`。
+
+
+
+### 定义计划
+
+`app\console\Kernel.php` 文件定义
+
+~~~php
+<?php
+
+namespace App\Console;
+
+use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+
+class Kernel extends ConsoleKernel
+{	
+    // ...
+    
+    protected function schedule(Schedule $schedule)
+    {
+
+        /* 
+        	定义计划任务 php larabbs:cal-active-user 以一个小时的频率执行
+        */
+        $schedule->command('larabbs:cal-active-user')->hourly();
+
+    }
+    
+    // ...
+
+}
+
+~~~
 
 
 

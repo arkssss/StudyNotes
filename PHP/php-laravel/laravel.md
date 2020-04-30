@@ -159,21 +159,27 @@ public function show(User $user){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # 数据库
+
+## 查询构造器
+
+`laravel` 中可以直接使用 `Illuminate\Support\Facades\DB;`  的外观类构造 sql 查询
+
+### 原生查询
+
+~~~php
+# 查询可以直接通过 DB::select() 函数构建.
+# ？即为占位符，用于做变量替换
+return DB::select("SELECT * from post where u_id = ? limit ?", [$id, $limit]);
+~~~
+
+
+
+
+
+
+
+
 
 ## 数据库迁移
 
@@ -378,14 +384,6 @@ class SeedPostCategoriesData extends Migration
     
     > $php artisan db:seed --class=BlogTableSeeder
 ~~~
-
-
-
-
-
-
-
-
 
 
 

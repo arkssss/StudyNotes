@@ -896,6 +896,16 @@ REDIS_PORT=6379
 ],
 ~~~
 
+## 缓存相关命令
+
+### 清空所有缓存
+
+~~~shell
+$php artisan cache:clear
+~~~
+
+
+
 
 
 ## 缓存的使用
@@ -904,7 +914,7 @@ REDIS_PORT=6379
 
 
 
-### 存值 `put`
+###存值 `put`
 
 ~~~php
 use Illuminate\Support\Facades\Cache;
@@ -923,6 +933,28 @@ use Illuminate\Support\Facades\Cache;
 /* 取 key 为name的值 */
 Cache::get('name');
 ~~~
+
+
+
+### 获取值且不存在的时候设置 `remember`
+
+有时你可能想从缓存中获取一个数据，而当请求的缓存项不存在时，程序能为你存储一个默认值你可以使用 `Cache::remember` 方法来实现：
+
+```php
+/*
+例如，你可能想从缓存中获取所有用户，当缓存中不存在这些用户时，程序将从数据库将这些用户取出并放入缓存。
+*/
+
+// user为获取的key值, $seconds 为过期时间, 后面的匿名函数即为不存在的时候设置的值
+$value = Cache::remember('users', $seconds, function () {
+    return DB::table('users')->get();
+});
+
+// 当不传时间的时候，即为永久
+$value = Cache::remember('users', function () {
+    return DB::table('users')->get();
+});
+```
 
 
 
