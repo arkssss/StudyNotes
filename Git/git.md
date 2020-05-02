@@ -152,12 +152,6 @@ $git reset --hard <commit id>
 
 
 
-
-
-
-
-
-
 # III. 问题与解决
 ## 1. gitignore 文件失效
 
