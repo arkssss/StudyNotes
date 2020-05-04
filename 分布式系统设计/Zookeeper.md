@@ -2,9 +2,49 @@
 
 [TOC]
 
+# 安装
+
+[下载地址](<https://zookeeper.apache.org/>)
+
+## 生成 zoo.cfg
+
+默认下载下来的 `zookeeper` 是没有配置文件的，但是自带一个 `zoo_sample.cfg`
+
+我们仅需 copy 该文件为我们的配置文件即可
+
+~~~shell
+$cp zoo_sample.cfg zoo.cfg
+~~~
 
 
-# 概述
+
+## 开启 zookeeper 服务端
+
+~~~shell
+# zookeeper 服务端sh防与 bin 文件夹下
+$cd zookeeper/bin
+
+# 开启
+$./zkServer.sh start
+~~~
+
+
+
+## 使用客户端进入 zookeeper
+
+~~~shell
+# zookeeper 客户端同样位于 bin 文件夹下
+$cd zookeeper/bin
+
+# 进入
+$./zkCli.sh 
+~~~
+
+
+
+
+
+# 基础概念
 
 `ZooKeeper` 是一个为分布式服务器提供 **协调服务** 的 `Apache` 项目
 
@@ -38,48 +78,24 @@
 
 <img src='image/2019-09-03-zpnode.svg'  />
 
+## Zookeeper 服务
 
-
-
-
-# Zookeeper 服务
-
-## 统一命名服务
+### 统一命名服务
 
 **类似软负载均衡, 可以将一个域名定位到内部集群的不同机器上, 实现负载均衡的效果 (可以类比于 Nginx)**
 
-
-
-
-
-## 统一配置管理
+### 统一配置管理
 
 * 一个集群中, 所有节点的配置文件都是一致的
 * 对配置文件修改后, 可以快速同步到各个节点上
 
 * 可以将配置文件写在 Zookeeper 的各的 Znode 上
 
-
-
-
-
-## 统一集群管理
+### 统一集群管理
 
 * Zookeeper 可以实时监控节点的状态变化
 
-
-
-
-
-## 服务器动态上下线
-
-
-
-
-
-
-
-# Zookeeper 选举机制
+## Zookeeper 选举机制
 
 选举机制就是一种选举出 **集群 Leader** 的一种机制
 
@@ -95,11 +111,7 @@
 * 每一个节点首先投票投给自己, 如果此时没有产生 **Leader** 那么投票投给 **myid** 最的节点
 * 如果某一个节点的获得的票数超过半数, 那么该节点立即升级为 **Leader**, 而无需再管其他节点的投票.
 
-
-
-
-
-# Zookeeper 节点类型
+## Zookeeper 节点类型
 
 * 持久型节点 : 客户端和服务器断开后, 创建的节点不删除
 * 短暂型节点 : 客户端和服务器断开后, 创建的节点自己删除 **可以用于判断节点的存活与否**
