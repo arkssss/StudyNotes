@@ -191,14 +191,6 @@ public boolean addStudent(Student student) {
 
 
 
-
-
-
-
-
-
-
-
 # 一. ORM 思想
 
 Object Relational Mapping 对象关系映射

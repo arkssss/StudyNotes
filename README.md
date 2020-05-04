@@ -10,7 +10,7 @@
 
 🏃🏃‍♀️
 
-# 计算机基础
+## 计算机基础
 
 [数据结构与算法 (exam version)](datastructure/ds.md)
 
@@ -18,7 +18,7 @@
 
 
 
-# 后端语言
+## 语言
 
 [Java](java/README.md) 
 
@@ -28,7 +28,7 @@
 
 
 
-# Web 前端
+## Web 前端
 
 [JavaScript基础]
 
@@ -38,50 +38,15 @@
 
 
 
+## 分布式系统设计
 
-# 机器学习
+### 服务治理
 
-对所学的机器学习的相关课程 **用自己的话进行的归纳总结**
-
-[机器学习](机器学习/README.md)
-
-
-
-# Linux
-
-[Linux基础](linux/README.md)
-
-
-
-# MySQL 数据库
-
-[MySQL基础](MySQL/README.md)
-
-
-
-# 缓存层
-
-[Redis](Redis/Redis.md)
-
-[MongoDB](MongoDB/MongDB.md)
-
-
-
-# 中间件
-
-[消息队列概述](中间件/消息队列/消息队列概述.md)
-
-[RabbitMQ](中间件/消息队列/RabbitMQ.md)
-
-
-
-
-
-# 分布式系统设计
+Eureka | Zookeeper 
+:-: | :-: 
+**Consul** | **Nacos** 
 
 [PRC 远程调用]
-
-[Zookeeper]
 
 [Nginx 负载均衡]
 
@@ -89,19 +54,49 @@
 
 
 
-# 大数据
+## 机器学习
+
+[机器学习](机器学习/README.md)
+
+
+
+## Linux
+
+[Linux基础](linux/README.md)
+
+
+
+## 数据库
+
+[MySQL基础](MySQL/README.md)
+
+[Redis](Redis/Redis.md)
+
+[MongoDB](MongoDB/MongDB.md)
+
+
+
+## 中间件
+
+[消息队列概述](中间件/消息队列/消息队列概述.md)
+
+[RabbitMQ](中间件/消息队列/RabbitMQ.md)
+
+
+
+## 大数据
 
 [大数据基本概念]
 
 
 
-# 设计模式
+## 设计模式
 
-[基本设计模式]()
+[基本设计模式]
 
 
 
-# 常用工具
+## 常用工具
 
 [Git 常用命令](Git/git.md)
 
