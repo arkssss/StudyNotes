@@ -155,6 +155,14 @@ Spring cloud 封装 Netfix 发开的 **Erueka** 来实现服务治理工作。
 
 
 
+| 组件名    | 语言 | CAP  | 健康检查   | 接口     | Spring Cloud 集成 |
+| --------- | ---- | ---- | ---------- | -------- | ----------------- |
+| Eureka    | Java | AP   | 可配置支持 | HTTP     | 集成              |
+| Consul    | Go   | CP   | 支持       | HTTP/DNS | 集成              |
+| Zookeeper | Java | CP   | 支持       | 客户端   | 集成              |
+
+
+
 
 
 

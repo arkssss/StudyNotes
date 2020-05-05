@@ -64,6 +64,29 @@ restTemplate.postForObject(PAYMENT_URL + "/payment/create", payment, CommonResul
 restTemplate.getForObject(PAYMENT_URL + "/payment/get/" + id, CommonResult.class);
 ~~~
 
+## 相关注解
+
+###  `@LoadBalanced` 
+
+要成功实现负载均衡调用，需要在 `RestTemplate` 注入的时候加入该注解
+
+```java
+/**
+ * IoC 容器初始化注入类
+ */
+@Configuration
+public class ApplicationContextConfig {
+
+    /* RestTemplate 注入到容器中 */
+    @Bean
+    @LoadBalanced	// enable 负载均衡调用
+    public RestTemplate getRestTemplate(){
+        return new RestTemplate();
+    }
+
+}
+```
+
 
 
 
