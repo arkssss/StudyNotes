@@ -38,7 +38,11 @@ public class ApplicationContextConfig {
 
 # 二. 基本用法
 
-## 常用函数
+## 常用函数 ---ForObject
+
+---ForObject 函数返回对象为响应体中数据转化的对象，**基本上可以理解为 Json**
+
+推荐使用 **---ForObject 方法**
 
 ### `postForObject`
 
@@ -63,6 +67,33 @@ restTemplate.postForObject(PAYMENT_URL + "/payment/create", payment, CommonResul
 */
 restTemplate.getForObject(PAYMENT_URL + "/payment/get/" + id, CommonResult.class);
 ~~~
+
+
+
+## 常用函数 ---ForEntity
+
+---ForEntity函数返回的是 ResponseEntity<> 对象。
+
+
+
+### `getForEntity`
+
+~~~java
+ResponseEntity<CommonResult> entity =
+    restTemplate.getForEntity(PAYMENT_URL + "/payment/get/" + id, CommonResult.class);
+
+/*	
+	获取请求状态码
+    entity.getStatusCode().is2xxSuccessful()
+    
+    获取内容, 可直接返回
+    entity.getBody();
+*/
+~~~
+
+
+
+
 
 ## 相关注解
 

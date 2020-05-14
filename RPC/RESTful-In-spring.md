@@ -22,10 +22,6 @@ Spring 中 RESTful 接口的返回值可以有多种 :
 
 
 
-
-
-
-
 # 二. JSON 返回形式
 
 这种形式的返回需要客户端的请求头支持 Json 返回, 即 : `Accept : applcation/json`
@@ -271,34 +267,6 @@ public ResponseEntity<ResponseError> TestTableNotFound(UserNotFoundException e){
 * **@ResponseStatus :** 
 
   注解可以加在方法之前, 从而可以实现和 ResponseEntity 一样的话返回状态码的效果
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

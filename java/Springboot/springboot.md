@@ -386,7 +386,33 @@ public class QuickFirstStartApplication {
 
 
 
+# 五. 综合话题
 
+## IoC 容器并发安全性
+
+Springboot和传统 Spring一样, 在IoC容器的bean默认都是单例的 包括我们常用的 Controller, Service, Dao 等等。**注意单例的对象同样可以被多线程并发访问**， 因此单例中的成员变量是多线程可访问的，并不是线程安全。
+
+~~~java
+/* for example */
+@Controller
+public class ScopeTestController {
+
+    private int num = 0;
+
+    @RequestMapping("/testScope")
+    public void testScope() {
+        System.out.println(++num);
+    }
+
+    @RequestMapping("/testScope2")
+    public void testScope2() {
+        System.out.println(++num);
+    }
+
+}
+~~~
+
+此时同时访问 `/testScope` 和 `/testScope2` 会得到不同的j结果 1, 2 。且和PHP不同，Java 是常驻内存的，对象的成员变量会对所有的请求保存更改，并不会在请求结束后销毁。
 
 
 

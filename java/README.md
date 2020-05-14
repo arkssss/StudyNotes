@@ -1,6 +1,6 @@
 # Java 基础部分
 
-## Java SE 
+## 一. Java SE 
 
 * [Java 运行](JavaSE/关于java运行.md)
 * [Java 异常](JavaSE/Java异常.md)
@@ -17,8 +17,11 @@
   * [抽象类和接口](JavaSE/抽象类和接口.md)
 * 其他
   * [JAVA 按值传递 与 按引用传递](JavaSE/JAVA按值传递与按引用传递.md)
+  * [String类](其他类/String.md)
+  * [Runtime类](其他类/Runtime.md)
+  * [Math类](其他类/Math.md)
 
-## 并发
+## 二. 并发
 
 * [多线程overview](并发/多线程.md)
 * [线程池](并发/线程池.md)
@@ -27,14 +30,14 @@
 
 
 
-## Java IO
+## 三. Java IO
 
 * [IO模型](JavaIO/IO模型.md)
 * [JavaIO操作](JavaIO/JavaIO操作.md)
 
 
 
-## JVM
+## 四. JVM
 
 * [内存区域](JVM/Java内存区域.md)
 * [垃圾回收机制](JVM/垃圾回收机制.md)
@@ -42,7 +45,7 @@
 
 
 
-## 容器
+## 五. 容器
 
 * [Collection](容器/Java工具类-集合.md)
 * [Map](容器/Java工具类-Map.md)
@@ -50,38 +53,36 @@
 
 
 
-## JDBC
+## 六. JDBC
 
 * [JDBC概述](JDBC/JDBC.md)
 
 
 
-## 其他类
+# 框架及工具
 
-* [String类](其他类/String.md)
-* [Runtime类](其他类/Runtime.md)
-* [Math类](其他类/Math.md)
-
-
-
-# Java 框架
-
-## Spring
+## Spring 🍃
 
 * [IoCI](Spring/IoCI.md)
 * [IoCII](Spring/IoCII.md)
 * [AOP](Spring/AOP.md)
-
-
-
-## SpringMVC
-
 * [SpringMVC](SpringMVC/SpringMVC.md)
-* [项目启动注意点](SpringMVC/SpringMVC启动.md)
+* [SpringMVC 项目启动注意点](SpringMVC/SpringMVC启动.md)
 
 
 
-## MyBatis
+## Springboot 🍃
 
-* [持久层与MyBatis](MyBatis/MyBatis.md)
+* [Springboot 入门](Springboot/springboot.md)
+
+
+
+## 持久层框架及工具
+
+- [MyBatis](MyBatis/MyBatis.md)
+
+- [Lombok](Lombok/Lombok.md)
+
+
+
 

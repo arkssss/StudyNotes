@@ -4,7 +4,35 @@
 
 <img src='image/micoservice-component.png'>
 
-# 概述
+### 服务治理
+
+- [Eureka](Eureka.md)
+- [Zookeeper](zk/Zookeeper.md)
+- Consul
+- Nacons
+
+### 服务调用
+
+- LoadBalance
+- [Ribbon](Ribbon.md)
+- [RestTemplate](RestTemplate.md)
+- [OpenFeign](OpenFeign.md)
+
+### 配置中心
+
+- Springcldou-config
+
+### 服务降级
+
+- [Hystrix](Hystrix.md)
+
+### 服务网关
+
+- Gateway
+
+
+
+# 版本依赖
 
 ## Spring could 和 springboot 的版本依赖
 
@@ -15,8 +43,6 @@
 | Finchley      | 2.0.x        |
 | Edgware       | 1.5.x        |
 | Dalston       | 1.5.x        |
-
-
 
 ## 推荐技术战版本
 
@@ -34,8 +60,6 @@
 # 构建简单远程调用集群
 
 ## 构建父工程
-
-
 
 ## 构建一个微服务模块 
 

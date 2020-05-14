@@ -4,9 +4,9 @@
 
 
 
-# PHP 框架 Laravel
+# 框架
 
-## Laravel
+## Laravel 
 
 * [Laravel MVC 架构](php-laravel/laravel.md)
 * [Laravel 内核](php-laravel/laravel-kernel.md)
@@ -18,9 +18,7 @@
 
 
 
-
-
-# 关于环境搭建
+# 环境搭建
 
 - [基于 Homestead 环境搭建](php-laravel/laravel-env.md)
 
