@@ -8,7 +8,7 @@
 
 
 
-# Route 层
+# 一. Route 层
 
 路由层, 将 http 请求映射到相应的控制器中. 注意处理 http 路由的位于 `routes/web.php` 中
 
@@ -109,7 +109,7 @@ public function delete(){
 
 
 
-# Controller 控制器层
+# 二. Controller 控制器层
 
 ## 创建一个控制器
 
@@ -159,7 +159,7 @@ public function show(User $user){
 
 
 
-# 数据库
+# 三. 数据库
 
 ## 查询构造器
 
@@ -172,12 +172,6 @@ public function show(User $user){
 # ？即为占位符，用于做变量替换
 return DB::select("SELECT * from post where u_id = ? limit ?", [$id, $limit]);
 ~~~
-
-
-
-
-
-
 
 
 
@@ -387,7 +381,7 @@ class SeedPostCategoriesData extends Migration
 
 
 
-# View 层
+# 四. View 层
 
 Webapp 中 View 层即传递给前端的 HTML 
 
@@ -407,9 +401,9 @@ return View('user.edit', compact('user'))
 
 
 
-# Model 层
+# 五. Eloquent ORM
 
-##Eloquent ORM
+## #1. Eloquent 模型
 
 Laravel 的 model 层为 ORM 架构, 在框架中叫 : `Eloquent ORM`, 所谓的 ORM 即为 Object Relation Map. 表示数据库中的每一个表都对应一个 Model 对象
 
@@ -551,7 +545,7 @@ public Post extends Model{
 
 
 
-## 模型操作 CRUD
+## #2. 模型操作 CRUD
 
 > [快速入门](<https://learnku.com/docs/laravel/6.x/eloquent/5176#retrieving-single-models>)
 
@@ -627,29 +621,40 @@ App\Models\Post::create([['title'=>'hello'], ['title'=>'hello world']]);
 
 
 
+## #3. Eloquent 集合
 
+> [Eloquent 集合](https://learnku.com/docs/laravel/7.x/eloquent-collections/7501)
+>
+> Eloquent 返回的所有结果集都是 `Illuminate\Database\Eloquent\Collection` 对象的实例，包括通过 `get` 方法检索或通过访问关联关系获取到的结果。 Eloquent 的集合对象继承了 Laravel 的 [集合基类](https://learnku.com/docs/laravel/7.x/collections)，因此它自然也继承了数十种能优雅地处理 Eloquent 模型底层数组的方法。
 
-## Model REPL - tinker
+Eloquent 集合可以看作为 **模型Entity的容器**，存储了结果集中所有的模型实例.
 
-即直接用命令的方式进行数据库操作.
+### 遍历
 
-~~~shell
-# 进入 tinker 模式
-> php artisan tinker
+~~~php
+/* Illuminate\Database\Eloquent\Collection */
 
->>> ...
+$users = App\User::where('active', 1)->get();
+
+/* 可以直接遍历出模型实例 */
+foreach ($users as $user) {
+    echo $user->name;
+}
 ~~~
 
-### 新增记录
-
-~~~shell
-# App\Models\User 表示操作的模型
->>>App\Models\User::create(['name'=>'ark','email'=>'ark@example.com','password'=>bcrypt('password')])
-~~~
 
 
 
-## 模型事件
+
+
+
+
+
+
+
+
+
+## #4. 模型事件
 
 > [手册中的模型事件](https://learnku.com/docs/laravel/6.x/eloquent/5176#events)
 
@@ -716,7 +721,7 @@ Eloquent 模型事件允许我们在模型的合个生命周期节点上进行�
 
 
 
-## 模型关联
+## #5. 模型关联
 
 > [手册中的模型关联](https://learnku.com/docs/laravel/5.5/eloquent-relationships/1333)
 >
@@ -869,6 +874,34 @@ Schema::create('car_driver', function (Blueprint $table) {
     /* 删除当前司机的 car_id 为 1,2 的中间表记录 */
     $driver->car()->detach([1, 2]);
 ~~~
+
+
+
+
+
+
+
+
+
+
+
+# 六. Model REPL - tinker
+
+即直接用命令的方式进行数据库操作.
+
+```shell
+# 进入 tinker 模式
+> php artisan tinker
+
+>>> ...
+```
+
+### 新增记录
+
+```shell
+# App\Models\User 表示操作的模型
+>>>App\Models\User::create(['name'=>'ark','email'=>'ark@example.com','password'=>bcrypt('password')])
+```
 
 
 

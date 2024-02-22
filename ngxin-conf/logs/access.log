@@ -1,0 +1,8 @@
+172.17.0.1 - - [29/Apr/2021:16:29:39 +0000] "GET /public/h1.html HTTP/1.1" 404 556 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36" "-"
+172.17.0.1 - - [29/Apr/2021:16:29:39 +0000] "GET /favicon.ico HTTP/1.1" 404 556 "http://127.0.0.1:8080/public/h1.html" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36" "-"
+172.17.0.1 - - [29/Apr/2021:16:30:57 +0000] "GET / HTTP/1.1" 404 556 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36" "-"
+172.17.0.1 - - [29/Apr/2021:16:31:04 +0000] "GET /data/h1.html HTTP/1.1" 200 13 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36" "-"
+172.17.0.1 - - [29/Apr/2021:16:31:11 +0000] "GET /data/img1.png HTTP/1.1" 200 208211 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36" "-"
+172.17.0.1 - - [05/Jun/2021:16:20:11 +0000] "GET / HTTP/1.1" 404 556 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36" "-"
+172.17.0.1 - - [05/Jun/2021:16:20:11 +0000] "GET /favicon.ico HTTP/1.1" 404 556 "http://127.0.0.1:8080/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36" "-"
+172.17.0.1 - - [05/Jun/2021:16:20:26 +0000] "GET / HTTP/1.1" 404 556 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36" "-"

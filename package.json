@@ -1,0 +1,19 @@
+{
+  "name": "ark-study-note",
+  "version": "1.0.0",
+  "description": "这个 Repo 用于记录大致从2019年准备秋招开始, 断断续续整理的一些笔记, 最后成功上岸鹅厂.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arkssss/StudyNotes.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arkssss/StudyNotes/issues"
+  },
+  "homepage": "https://github.com/arkssss/StudyNotes#readme"
+}

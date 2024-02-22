@@ -1,0 +1,6 @@
+2021/04/29 16:29:39 [error] 21#21: *1 open() "/etc/nginx/html/public/h1.html" failed (2: No such file or directory), client: 172.17.0.1, server: , request: "GET /public/h1.html HTTP/1.1", host: "127.0.0.1:8080"
+2021/04/29 16:29:39 [error] 21#21: *1 open() "/etc/nginx/html/favicon.ico" failed (2: No such file or directory), client: 172.17.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "127.0.0.1:8080", referrer: "http://127.0.0.1:8080/public/h1.html"
+2021/04/29 16:30:57 [error] 21#21: *4 "/etc/nginx/html/index.html" is not found (2: No such file or directory), client: 172.17.0.1, server: , request: "GET / HTTP/1.1", host: "127.0.0.1:8080"
+2021/06/05 16:20:11 [error] 21#21: *2 "/etc/nginx/html/index.html" is not found (2: No such file or directory), client: 172.17.0.1, server: , request: "GET / HTTP/1.1", host: "127.0.0.1:8080"
+2021/06/05 16:20:11 [error] 21#21: *2 open() "/etc/nginx/html/favicon.ico" failed (2: No such file or directory), client: 172.17.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "127.0.0.1:8080", referrer: "http://127.0.0.1:8080/"
+2021/06/05 16:20:26 [error] 21#21: *2 "/etc/nginx/html/index.html" is not found (2: No such file or directory), client: 172.17.0.1, server: , request: "GET / HTTP/1.1", host: "127.0.0.1:8080"

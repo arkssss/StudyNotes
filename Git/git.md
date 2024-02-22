@@ -1,7 +1,7 @@
 # Git 版本控制器
 [TOC]
 
-# 1I.概念
+# I.概念
 
 **可以管理什么格式的文件**
 
@@ -144,6 +144,79 @@ $git checkout .
 $git reset --hard <commit id>
 
 ~~~
+
+
+
+## 8. Rebase
+
+rebase change the history
+
+### 压缩Commit
+
+使用 Rebase 压缩分支的 Commit
+
+~~~shell
+# 表示需要压缩从 (lastCommitId ~ Head] 之间的所有commit
+# -i 表示交互式rebase
+$git rebase -i <lastCommitId>
+~~~
+
+假设提交记录如下, 现在需要压缩 feature1, feature2 到一个 commit
+
+~~~mermaid
+graph LR
+base --> feature1
+feature1 --> feature2
+~~~
+
+~~~shell
+# 从 feature1 开始压缩
+git rebase -i <baseCommitID>
+~~~
+
+输入命令后会出现如下交互界面, 编辑后 `:wq` 保存
+
+~~~
+pick 7acd1ba feature 1
+# 我们将 feature2 压缩到 feature 1中
+# 前面的 pick 改为 s (squash)
+s 48a0bb9 feature 2
+
+# Rebase 1f6d95d..48a0bb9 onto 1f6d95d (2 commands)
+#
+# Commands:
+# p, pick = use commit
+# r, reword = use commit, but edit the commit message
+# e, edit = use commit, but stop for amending
+# s, squash = use commit, but meld into previous commit
+# f, fixup = like "squash", but discard this commit's log message
+# x, exec = run command (the rest of the line) using shell
+# d, drop = remove commit
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+#
+# Note that empty commits are commented outpick 7acd1ba feature 1
+pick 48a0bb9 feature 2
+
+# Rebase 1f6d95d..48a0bb9 onto 1f6d95d (2 commands)
+~~~
+
+压缩完成后, Commit 会变为: 
+
+~~~mermaid
+graph LR
+base --> feature1&feature2
+~~~
+
+### 合并分支 -- VS Merge
+
+[merging-vs-rebasing](https://www.atlassian.com/git/tutorials/merging-vs-rebasing)
+
+
 
 
 

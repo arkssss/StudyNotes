@@ -531,6 +531,127 @@ deleteRow(id){
 
 
 
+## HOOK - 函数式编程
+
+> *Hook* 是 React 16.8 的新增特性。它可以让你在不编写 class 的情况下使用 state 以及其他的 React 特性。
+>
+> [react hook](https://react.docschina.org/docs/hooks-overview.html)
+>
+> [react hook index](https://react.docschina.org/docs/hooks-reference.html#usecontext)
+
+### `useState`
+
+等同将 `this.state ={}` 和 `this.setState({})` 在变量唯独拆分
+
+~~~js
+// 声明一个叫 “count” 的 state 变量。
+// count 的初始值为0
+const [count, setCount] = useState(0);
+
+// 可以调用 setCount 函数对值进行重赋
+setCount(x)
+~~~
+
+~~~javascript
+// 设置一个 obj 的对象
+const [obj, setObj] = useState({a:"1", b:"2"})
+
+// 设置对象需要按如下格式
+setObj({
+  ...obj,
+  a: "3"
+})
+~~~
+
+### `useEffect`
+
+该`hooker`允许在函数组件中执行 **副作用** 操作时回调
+
+> 副作用: 可以看为 `componentDidMount`，`componentDidUpdate` 和 `componentWillUnmount` 这三个函数的组合
+>
+> 即每一次DOM重新渲染都可以看作为一次副作用
+
+~~~js
+// 当dep发生变化时, 则会自动调用 useEffect() 里面的函数
+useEffect(()=>{
+  document.title = `You clicked ${count} times`;
+}, [dep])
+~~~
+
+1. 当模拟 `componentDidMount`
+
+   ~~~js
+   useEffect(()=>{
+     document.title = `You clicked ${count} times`;
+   }. []) // dep 必须填空			
+   ~~~
+
+2. 当模拟 `componentDidUpdate`
+
+   ~~~js
+   const [n, setN] = React.useState(0)
+   
+   // 
+   useEffect(() => {     //  模拟  componentDidUpdate 
+           console.log('n 变化了')
+       },[n])  // 数组里面可以写多个参数表示监听多个变量
+   ~~~
+
+3. 模拟`componentWillUnmount`
+
+   ~~~js
+   useEffect(() => {    
+     return () => {
+       console.log('Child 销毁了')
+     }
+   })    //  返回一个函数 在销毁时执行
+   ~~~
+
+
+
+### `useMemo`
+
+一个性能优化 `hook` , 通常会定义一个 `computeExpensiveValue` 函数及其依赖, 仅当依赖发生变化时才重新计算 `computeExpensiveValue` 
+
+* `useMemo` 返回的是一个计算后的值
+* 每当 `dep` 发生变化的时候, 都重新计算一次, 如果 `dep` 为空, 则每次渲染都会重新计算
+
+~~~js
+// {memoCount} 是值
+const memoCount = useMemo(()=>{
+  console.log("im fnMemo, im compute")
+  return count
+},[count])
+
+// 对比
+// 这种方式, 在每个 state val 变化的时候, 都会重新的计算一次
+const notMemoCount = () => {
+  console.log("im notMemoCount")
+  return count
+}
+~~~
+
+### `useCallback`
+
+和 `useMemo` 类似, 不同的是 `useCallback` 返回一个函数
+
+~~~js
+// 返回一个函数
+// {callbackFn()} 是一个函数
+const callbackFn =  useCallback(()=>{
+  console.log(`im useCallback, im compute:${count}`)
+}, [count])
+~~~
+
+
+
+
+
+
+
+
+
+
 
 # 项目构建准则
 

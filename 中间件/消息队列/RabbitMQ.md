@@ -1,6 +1,6 @@
 # RabbitMQ
 
-采用 `Erlang` 编写
+> [官方文档](<https://www.rabbitmq.com/tutorials/tutorial-one-go.html>)
 
 [TOC]
 
@@ -50,11 +50,9 @@ virtual hsot 相当于 MySQL 中的 db 的概念
 
 
 
+# 三. 队列种类
 
-
-
-
-# 四. 简单队列模型	
+## #1. 简单队列模型	
 
 简单的 **生产者消费者模型**
 
@@ -69,9 +67,7 @@ virtual hsot 相当于 MySQL 中的 db 的概念
 - 耦合性高 : 生产者, 消费者一一对应.
 - 消费者只能有一个
 
-
-
-
+### `Java` 实现
 
 **Mq 连接**
 
@@ -202,27 +198,31 @@ channel.basicConsume(QUEUE_NAME, true, consumer);
 
 
 
+### `Go` 实现
+
+~~~
+...
+~~~
 
 
 
-
-# 五. Work 队列模型 (多消费者模型)
+## #2. Work 队列模型 (多消费者模型)
 
 这个模型中  **一个小生产者, 多个消费者**
 
 <img src='../image/2019-09-01-workers.svg' />
 
-## 轮询分发消息
-
-`Channel.basicConsume()`
+### 轮询分发 (Round-robin dispatching)
 
 不管消费者处理能力以及时间如何, 经过 `RabbitMq` 发送给各个消费者的消息都是均分的, 也就是说, **消息均匀分发到各个消费者** , 并不是哪个消费者处理的快, 就处理的消息多
 
+<img src="../image/work-queue.png" />
+
+两个消费者获得的任务是轮询分发的
 
 
 
-
-## 公平分发消息
+### 公平分发 (Fair dispatch)
 
 `Channel.basicQos(int Perfetch) `  
 
@@ -259,53 +259,7 @@ channel.basicConsume(QUEUE_NAME, false, consumer);
 
 
 
-# 六. 消息应答
-
-~~~java
-/*
-第二个参数就是 autoAck 
-*/
-channel.basicConsume(QUEUE_NAME, false, consumer);
-~~~
-
-
-
-`autoAck = True ` 表示, 一旦 `Mq` 将数据推送给消费者, 数据就被在 `MQ` 删除, 此时可能
-
-面临丢失消息的风险
-
-`autoAck = False` 表示, 手动确认消息. **也就是说,当消费者确认处理完后**, 我们的 `MQ` 才将内存数据删除. 
-
-**消息应答机制保证了, 消费者挂了,正在处理的任务不会丢失**
-
-
-
-# 七. 数据持久化
-
-`Mq` 将内存中的某个队列, 持久化到硬盘中.
-
-**注意, 是持久化一个队列, 而不是队列里面的消息**
-
-如果队列为预先定义了, 则不能通过 `durable` 声明的方式去改变该队列的持久化政策.
-
-~~~java
-// declare queue
-channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-
-
-/*
- 	第二个参数 : durable = true , 代表是否支持可持久化
- 	
-*/
-~~~
-
-**数据持久化保证了, MQ 挂了, 存储的数据不丢失**
-
-
-
-
-
-# 八. 发布订阅模型
+## #3. 发布订阅模型
 
 不同于前面模型的一个消费者消费一个消息, **发布订阅模型是 : 将同一个消息推送给多个消费者**
 
@@ -319,9 +273,7 @@ channel.queueDeclare(QUEUE_NAME, false, false, false, null);
 * 生产者没有直接把消息发送到队列, 而是直接发送到了交换机, **Exchanger 转发到各个队列**
 * 每个队列都要绑定到 **Exchanger** 上
 
-
-
-## Exchanger 交换机
+### Exchanger 交换机
 
 **注意交换机并没有存储消息的功能, 也就是说,如果没有队列和交换机绑定, 那么发送给交换机的队列将会被丢失**
 
@@ -373,9 +325,7 @@ public class Publisher {
 
 ~~~
 
-
-
-## 队列绑定交换机 Exchanger
+### 队列绑定交换机 Exchanger
 
 注意如果 `Exchanger` 不绑定 队列 会造成数据的丢失, 因为 `Exchanger` 只提供转发的工作, 不提供存储的功能
 
@@ -400,6 +350,125 @@ channel.queueBind(QUEUE_NAME, EXCHANGER_NAME, "");
 */
 ~~~
 
+
+
+# 四. 综合话题
+
+## #1. 消息确认 (Message acknowledgment)
+
+>Doing a task can take a few seconds. You may wonder what happens if one of the consumers starts a long task and dies with it only partly done. With our current code, once RabbitMQ delivers a message to the consumer it immediately marks it for deletion. In this case, if you kill a worker we will lose the message it was just processing. We'll also lose all the messages that were dispatched to this particular worker but were not yet handled.
+>
+>But we don't want to lose any tasks. If a worker dies, we'd like the task to be delivered to another worker.
+>
+>In order to make sure a message is never lost, RabbitMQ supports [message *acknowledgments*](https://www.rabbitmq.com/confirms.html). An ack(nowledgement) is sent back by the consumer to tell RabbitMQ that a particular message has been received, processed and that RabbitMQ is free to delete it.
+
+由于 Time-consuming 的任务可能在执行的时候，worker 突然中断，会导致正在处理的消息丢失，因此 `rabbitMq` 引入了 `Ack` 机制，使得在这种情况下，没有完成的任务可以被其他 worker 继续处理。
+
+具体是，在每一个消费者消费完一条消息之后，会发送一个 `ack` 信号给队列服务器，如果超过一定时间仍然没有发送，服务器便认为该消费者不工作，便将刚这个消费者未完成的消息重新加入队列分配。
+
+`rabbitMq` 规定了 `autoAck` 机制
+
+* `autoAck = True ` 表示, 一旦 `Mq` 将数据推送给消费者, 数据就被在 `MQ` 删除, 此时可能面临丢失消息的风险
+
+* `autoAck = False` 表示, 手动确认消息. **也就是说,当消费者确认处理完后**, 我们的 `MQ` 才将内存数据删除. **消息应答机制保证了, 消费者挂了,正在处理的任务不会丢失**
+
+### `Go`
+
+~~~go
+/* 将 auto-ack 设置为false 表示需要返回ack信号 */
+msgs, err := ch.Consume(
+    q.Name, 
+    "",     
+    false,	// autoAck
+    false,  
+    false, 
+    false,  
+    nil,    
+)
+~~~
+
+当 `autoAck` 设置为 `false` 的时候，我们便可以手动确认消息
+
+~~~go
+/* 消息确认 */
+d.ack(false)
+
+/* 消息确认失败，requeue为true表示重新分配给其他队列完成任务 */
+d.Nack(false, requeue:true)
+~~~
+
+
+
+### `Java`
+
+~~~java
+/*
+第二个参数就是 autoAck 
+*/
+channel.basicConsume(QUEUE_NAME, false, consumer);
+~~~
+
+
+
+
+
+## #2. 数据持久化 (Message durability)
+
+### 队列持久化
+
+`Mq` 将内存中的某个队列, 持久化到硬盘中.
+
+如果队列为预先定义了, 则不能通过 `durable` 声明的方式去改变该队列的持久化政策.
+
+队列持久化保证了, MQ servser 停止服务或者挂了, 存储的队列信息不丢失，**注意, 是持久化一个队列, 而不是队列里面的消息**
+
+在队列申明的时候，便可以选择持久化选项。
+
+~~~go
+// Go
+q, err := ch.QueueDeclare(
+    "work-queue", // name
+    true,   // durable
+    false,   // delete when unused
+    false,   // exclusive
+    false,   // no-wait
+    nil,     // arguments
+)
+~~~
+
+~~~java
+// Java
+// declare queue
+channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+
+/*
+ 	第二个参数 : durable = true , 代表是否支持可持久化
+ 	
+*/
+~~~
+
+仅仅使用 **队列持久化** 并不能保证在 `rabbit server` 挂掉的时候，**队列里面的信息不丢失**，所以还需要使用消息持久化策略保证消息不丢失
+
+### 消息持久化
+
+如果需要持久化队列里面的消息，那么需要在发布消息的时候，选择 **消息持久化模式**
+
+~~~go
+err = ch.Publish(
+    "",     // exchange
+    q.Name, // routing key
+    false,  // mandatory
+    false,  // immediate
+    amqp.Publishing {
+        DeliveryMode: amqp.Persistent,	// 开启消息持久化模式
+        ContentType: "text/plain",
+        Body:        []byte(body),
+    })
+~~~
+
+开启消息持久化模式后，消息可以在 `rabbitmq server` 挂掉的停止服务，重新启动的时候，仍然存活。
+
+> Marking messages as persistent doesn't fully guarantee that a message won't be lost. Although it tells RabbitMQ to save the message to disk, there is still a short time window when RabbitMQ has accepted a message and hasn't saved it yet. Also, RabbitMQ doesn't do fsync(2) for every message -- it may be just saved to cache and not really written to the disk. The persistence guarantees aren't strong, but it's more than enough for our simple task queue. If you need a stronger guarantee then you can use [publisher confirms](https://www.rabbitmq.com/confirms.html).
 
 
 
